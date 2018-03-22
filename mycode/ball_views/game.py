@@ -17,7 +17,6 @@ def ball_list(request):
         data = define.response("success",0)
         data["data"] = []
         for x in balls:
-            print(x)
             data["data"].append(x)
     return JsonResponse(data)
 

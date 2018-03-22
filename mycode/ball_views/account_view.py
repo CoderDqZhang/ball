@@ -4,11 +4,11 @@ from django.contrib.auth import login, authenticate
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib import auth
-
+from django.forms.models import model_to_dict
 from mycode.models.account import Account
 from .checkuser import checkdata
 import logging
-
+from mycode.models import define
 
 # def verify_user(request):
 #     if request.method == 'POST':
@@ -81,11 +81,8 @@ def verify_user(request):
 
         # 获取小程序数据
         code = request.POST.get('code')
-
-        print(code)
         user = authenticate(username=code, password=code)
         # 登陆用户并保存 cookie
-        print(user)
         if user:
             login(request, user)
             query_user = Account.objects.get(openid=code)
@@ -99,22 +96,50 @@ def verify_user(request):
             )
             user_ins.save()
             user_ins.is_active = True
-            print(user_ins.username)
-            print(user_ins.password)
             account = Account.objects.create(
                 user=user_ins,
                 openid=code
             )
             new_user = authenticate(username=code, password=code)
-            print(new_user)
             login(request, new_user)
             data['status'] = '已创建并登录'
         res = {'error': '错误'}
         data['info'] = res
         return JsonResponse(data)
-
-    data = {'error': '仅接受POST请求'}
+    else:
+        return JsonResponse(define.response("success",0,"请使用POST方式请求"))
     return JsonResponse(data)
+
+def update_user_info(request):
+    if request.method == 'POST':
+        openid = request.POST.get('openid')
+        try:
+            user = Account.objects.get(openid=openid)
+            checkrequest = define.request_verif(request,define.UPDATA_USER_INFO)
+            if checkrequest is None:
+
+                user.nickname = request.POST.get('nickname')
+                user.age = request.POST.get('age')
+                user.gender = request.POST.get('gender')
+                user.weight = request.POST.get('weight')
+                user.height = request.POST.get('height')
+                user.game_age = request.POST.get('ball_age')
+                user.phone = request.POST.get('phone')
+                user.province = request.POST.get('province')
+                user.city = request.POST.get('city')
+                user.avatar = request.POST.get('avatar')
+                user.save()
+                data = {}
+                data['user'] = model_to_dict(user)
+                return JsonResponse(define.response("success", 0, None, data))
+            else:
+                return JsonResponse(define.response("success", 0, checkrequest))
+        except Account.DoesNotExist:
+            return JsonResponse(define.response("success", 0, "用户不存在"))
+    else:
+        return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
+    return JsonResponse(data)
+
 
 def test(request):
     return JsonResponse({'success':'成功'})

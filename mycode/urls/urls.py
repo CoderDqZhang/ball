@@ -5,6 +5,7 @@ urlpatterns = [
 #User
     url('^test/', account_view.test),
     url('^WeChatlogin/',account_view.verify_user),
+    url('^updateUserInfo/',account_view.update_user_info),
 #ball
     url('^ball_list/',game.ball_list),
 #game

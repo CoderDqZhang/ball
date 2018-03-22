@@ -10,20 +10,20 @@ class AccountAdmin(admin.ModelAdmin):
 
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
-    list_display = ('createTime', 'game_location', 'game_location_detail',
+    list_display = ( 'game_location', 'game_location_detail',
                     'game_price', 'game_start_time','game_end_time',
                     'game_referee','game_number','game_place_condition'
                     )
-
-    def createTime(self, obj):
-        if obj.game_detail is None:
-            print("dsf")
-            return ""
-        else:
-            print(obj.game_detail)
-            for p in obj.game_create_user.all():
-                print(p)
-            return "\n".join([p.nickname for p in obj.game_create_user.all()])
+    # 'createTime',
+    # def createTime(self, obj):
+    #     if obj.game_detail is None:
+    #         print("dsf")
+    #         return ""
+    #     else:
+    #         print(obj.game_detail)
+    #         for p in obj.game_create_user.all():
+    #             print(p)
+    #         return "\n".join([p.nickname for p in obj.game_create_user.all()])
     # def createTime(self, obj):
     #     print(obj.game_create_user.nickname)
     #     return obj.game_create_user.nickname

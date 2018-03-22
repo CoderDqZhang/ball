@@ -6,18 +6,18 @@ from django.contrib.auth.models import User
 class Account(models.Model):
 
     user = models.OneToOneField(User)
-    nickname = models.CharField(max_length=200)  # 用户名
-    age = models.IntegerField(default=0)  # 年龄
-    gender = models.IntegerField(choices=define.GENDER, default=0)
-    weight = models.IntegerField(default=0)
-    height = models.IntegerField(default=0)
-    game_age = models.IntegerField(default=0)
-    phone = models.CharField(max_length=11, default='')
-    province = models.CharField(max_length=11, default='')
-    city = models.CharField(max_length=11, default='')
-    location = models.CharField('用户标识', max_length=100, default='default')
+    nickname = models.CharField('用户名',max_length=200)  # 用户名
+    age = models.IntegerField('年龄',default=0)  # 年龄
+    gender = models.IntegerField('性别',choices=define.GENDER, default=0)
+    weight = models.IntegerField('体重KG',default=0)
+    height = models.IntegerField('身高CM',default=0)
+    game_age = models.IntegerField('球龄',default=0)
+    phone = models.CharField('电话',max_length=11, default='')
+    province = models.CharField('所在省份',max_length=255, default='')
+    city = models.CharField('所在城市',max_length=255, default='')
+    location = models.CharField('用户标识', max_length=100, default='')
     openid = models.CharField(max_length=200, primary_key=True)
-    avatar = models.CharField(max_length=200, default='')
+    avatar = models.CharField('头像',max_length=200, default='')
     createTime = models.DateField(auto_created=True,auto_now_add=True)
 
     def __str__(self):
@@ -30,19 +30,17 @@ class Ball(models.Model):
     sub_title = models.CharField(max_length=100)
 
 class Game(models.Model):
-    game_create_user = models.ManyToManyField(Account,null=True, verbose_name='Account', blank=True)
-    game_detail = models.ManyToManyField(Ball,verbose_name='Ball', null=True, blank=True)
-    game_createTime = models.DateField(auto_created=True, auto_now_add=True)
-    game_location =  models.CharField('场地', max_length=100, default='default')  #场地
-    game_location_detail = models.CharField(max_length=200, default='') #场地具体名称
-    game_price = models.IntegerField('费用', default=0)  #费用
-    game_start_time = models.DateField()
-    game_end_time = models.DateField()
-    game_referee = models.BooleanField(default=False)
-    game_number = models.IntegerField(default=5)
+    game_create_user = models.ManyToManyField(Account,related_name='game_create_user', blank=True) #"创建用户",
+    game_detail = models.ManyToManyField(Ball, blank=True) #"球约类型",
+    game_createTime = models.DateField("创建时间",auto_created=True, auto_now_add=True) #"创建时间",
+    game_location =  models.CharField("场地", max_length=100, default='')  #"创建用户",
+    game_location_detail = models.CharField("场地地点",max_length=200, default='') #"场地地点",
+    game_price = models.IntegerField("费用", default=0)  #费用
+    game_start_time = models.DateField("开始时间") #"开始时间"
+    game_end_time = models.DateField("结束时间") #"结束时间"
+    game_referee = models.BooleanField("裁判",default=False) #"裁判",
+    game_number = models.IntegerField("球场人数",default=5) #"球场人数",
 
-    game_place_condition  = models.CharField('场地条件', max_length=100, default='default')  #场地
+    game_place_condition  = models.CharField("场地条件", max_length=100, default='')  #"场地条件",
 
-    game_user_list = models.ManyToManyField(Account,null=True, verbose_name='Account', related_name='game_id', blank=True)
-
-
+    game_user_list = models.ManyToManyField( Account,related_name='game_list_user',  blank=True) # "赴约人",

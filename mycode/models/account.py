@@ -2,6 +2,7 @@
 from django.db import models
 from mycode.models import define
 from django.contrib.auth.models import User
+from django.forms.models import model_to_dict
 
 class Account(models.Model):
 
@@ -23,21 +24,25 @@ class Account(models.Model):
     def __str__(self):
         return self.nickname
 
+    def json(self):
+        return model_to_dict(self)
+
 
 class Ball(models.Model):
 
     name = models.CharField(max_length=100)
     sub_title = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='image',default='user1.jpg')
 
 class Game(models.Model):
     game_create_user = models.ManyToManyField(Account,related_name='game_create_user', blank=True) #"创建用户",
     game_detail = models.ManyToManyField(Ball, blank=True) #"球约类型",
-    game_createTime = models.DateField("创建时间",auto_created=True, auto_now_add=True) #"创建时间",
+    game_createTime = models.DateTimeField("创建时间",auto_created=True, auto_now_add=True) #"创建时间",
     game_location =  models.CharField("场地", max_length=100, default='')  #"创建用户",
     game_location_detail = models.CharField("场地地点",max_length=200, default='') #"场地地点",
     game_price = models.IntegerField("费用", default=0)  #费用
-    game_start_time = models.DateField("开始时间") #"开始时间"
-    game_end_time = models.DateField("结束时间") #"结束时间"
+    game_start_time = models.DateTimeField("开始时间") #"开始时间"
+    game_end_time = models.DateTimeField("结束时间") #"结束时间"
     game_referee = models.BooleanField("裁判",default=False) #"裁判",
     game_number = models.IntegerField("球场人数",default=5) #"球场人数",
 

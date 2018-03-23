@@ -27,7 +27,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+STATIC_URL = '/static/'
+import os
+STATIC_PATH = os.path.join( os.path.dirname(__file__) , 'static' )
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
+MEDIA_URL = '/media/'
 # Application definition
 
 INSTALLED_APPS = [

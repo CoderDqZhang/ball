@@ -140,6 +140,23 @@ def update_user_info(request):
         return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
     return JsonResponse(data)
 
+def get_user_info(request):
+    if request.method == 'GET':
+        openid = request.GET.get('openid')
+        try:
+            user = Account.objects.get(openid=openid)
+            checkrequest = define.request_verif(request,define.GET_USER_INFO)
+            if checkrequest is None:
+                data = {}
+                data['user'] = model_to_dict(user)
+                return JsonResponse(define.response("success", 0, None, data))
+            else:
+                return JsonResponse(define.response("success", 0, checkrequest))
+        except Account.DoesNotExist:
+            return JsonResponse(define.response("success", 0, "用户不存在",None))
+    else:
+        return JsonResponse(define.response("success", 0, "请使用GET方式请求"))
+    return JsonResponse(data)
 
 def test(request):
     return JsonResponse({'success':'成功'})

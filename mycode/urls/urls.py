@@ -2,7 +2,6 @@ from mycode.ball_views import account_view, game
 from django.conf.urls import url
 import os
 from ball import settings
-from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -15,8 +14,7 @@ urlpatterns = [
     url('^ballList/',game.ball_list),
 #game
     url('^gameList/',game.game_list),
-#imagePath
-    url('^images/baseball.png',None)
+    url('^gameCreate/',game.game_create),
+    url('^gameDetail/',game.game_detail),
 
 ]
-static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

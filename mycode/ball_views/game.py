@@ -4,6 +4,7 @@ import logging
 from django.forms.models import model_to_dict
 from mycode.models.account import Ball,Game,Account
 from django.core import serializers
+import json
 
 logger = logging.getLogger(__name__)  # 刚才在setting.py中配置的logger
 
@@ -22,19 +23,51 @@ def ball_list(request):
 
 def game_list(request):
     if request.method == 'POST':
-        checkrequest = define.request_verif(request, define.GET_GAME_LIST)
+        body,checkrequest = define.request_verif(request, define.GET_GAME_LIST)
         if checkrequest is None:
-            game_id = request.POST.get('ball_id')
+            game_id = body['ball_id']
             games = Game.objects.all().filter(game_detail=Ball.objects.filter(id=game_id))
             data = {}
             data["game_list"] = []
             for x in games:
-                response = model_to_dict(x, exclude=['game_create_user',
-                                                                   'game_detail','game_user_list'])
+                response = model_to_dict(x, exclude=['game_create_user','game_detail','game_user_list',
+                                                     ])
+                user = x.game_create_user.first()
+                print(response)
                 response['user'] = model_to_dict(x.game_create_user.first())
-                response['ball'] = model_to_dict(x.game_detail.first())
+                image = x.game_detail.first().image
+                response['ball'] = model_to_dict(x.game_detail.first(), exclude='image')
+                # response['ball']['image'] = image
                 data["game_list"].append(response)
             return JsonResponse(define.response("success", 0, None, data))
+        else:
+            return JsonResponse(define.response("success", 0, checkrequest))
+    else:
+        return JsonResponse(define.response("success",0,"请使用POST方式请求"))
+    return JsonResponse(data);
+
+def game_detail(request):
+    if request.method == 'POST':
+        body,checkrequest = define.request_verif(request, define.GET_GAME_DETAIL)
+        if checkrequest is None:
+            game_id = body['game_id']
+            detail = Game.objects.get(id=game_id)
+            data = {}
+            if detail is None:
+                return JsonResponse(define.response("success", 0, "球约不存在"))
+            else:
+
+                data["game_detail"] = model_to_dict(detail, exclude=['game_create_user','game_detail','game_user_list',
+                                                     ])
+                user = detail.game_create_user.first()
+                data["game_detail"]['user'] = model_to_dict(detail.game_create_user.first())
+                image = detail.game_detail.first().image
+                data["game_detail"]['ball'] = model_to_dict(detail.game_detail.first(), exclude='image')
+                user_list = detail.game_user_list.all()
+                data["game_detail"]['user_list'] = []
+                for x in user_list:
+                    data["game_detail"]['user_list'].append(model_to_dict(x))
+                return JsonResponse(define.response("success", 0, None, data))
         else:
             return JsonResponse(define.response("success", 0, checkrequest))
     else:
@@ -77,7 +110,7 @@ def game_create(request):
                 game.game_user_list.add(user)
 
                 response['user'] = model_to_dict(user)
-                response['ball'] = model_to_dict(ball)
+                response['ball'] = model_to_dict(ball,exclude='image')
                 data['game'] = response
                 return JsonResponse(define.response("success", 0, data))
             else:

@@ -9,6 +9,8 @@ from mycode.models.account import Account
 from .checkuser import checkdata
 import logging
 from mycode.models import define
+from mycode.models.serializers import AccountSerializer
+import json
 
 # def verify_user(request):
 #     if request.method == 'POST':
@@ -80,7 +82,7 @@ def verify_user(request):
         data = {}
 
         # 获取小程序数据
-        code = request.POST.get('code')
+        code = json.loads(request.body.decode('utf-8'))['code']
         user = authenticate(username=code, password=code)
         # 登陆用户并保存 cookie
         if user:
@@ -112,10 +114,10 @@ def verify_user(request):
 
 def update_user_info(request):
     if request.method == 'POST':
-        openid = request.POST.get('openid')
+        openid = json.loads(request.body.decode('utf-8'))['openid']
         try:
             user = Account.objects.get(openid=openid)
-            checkrequest = define.request_verif(request,define.UPDATA_USER_INFO)
+            body, checkrequest = define.request_verif(request,define.UPDATA_USER_INFO)
             if checkrequest is None:
 
                 user.nickname = request.POST.get('nickname')
@@ -145,11 +147,12 @@ def get_user_info(request):
         openid = request.GET.get('openid')
         try:
             user = Account.objects.get(openid=openid)
-            checkrequest = define.request_verif(request,define.GET_USER_INFO)
+            body, checkrequest = define.request_verif(request,define.GET_USER_INFO)
             if checkrequest is None:
                 data = {}
+                # return  AccountSerializer
                 data['user'] = model_to_dict(user)
-                return JsonResponse(define.response("success", 0, None, data))
+                return  JsonResponse(define.response("success", 0, None, data))
             else:
                 return JsonResponse(define.response("success", 0, checkrequest))
         except Account.DoesNotExist:

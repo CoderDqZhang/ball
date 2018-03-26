@@ -1,6 +1,8 @@
 #-*- coding: UTF-8 -*-
 import datetime
 import pytz
+import time
+import json
 
 GENDER = (
         (1, '男'),
@@ -16,6 +18,8 @@ GET_USER_INFO = ['openid']
 
 GET_GAME_LIST = ['ball_id']
 
+GET_GAME_DETAIL = ['game_id']
+
 CREATE_GAME = ['openid','ball_id','game_location','game_location_detail',
                'game_price','game_start_time','game_end_time','game_referee',
                'game_number','game_place_condition']
@@ -24,8 +28,12 @@ CREATE_GAME = ['openid','ball_id','game_location','game_location_detail',
 def timeStamp_to_date(timeStamp):
     dateArray = datetime.datetime.utcfromtimestamp(float(timeStamp))
     otherStyleTime = dateArray.strftime("%Y-%m-%d %H:%M:%S")
-
     return otherStyleTime
+
+def date_to_timeStamp(date):
+    dtime = datetime.datetime.now()
+    ans_time = time.mktime(dtime.timetuple())
+    return ans_time
 
 #请求返回数据整合
 def response(status,code,msg = None,request_data = None):
@@ -43,10 +51,9 @@ def request_verif(request_body,request_list):
     data = {}
     error = False
     data['errors'] = []
-
     if request_body.method == 'POST':
         for p in request_list:
-            if p not in request_body.POST:
+            if p not in json.loads(request_body.body.decode('utf-8')):
                 data['errors'].append({"参数错误":p+"未传值"})
                 error = True
     elif request_body.method == 'GET':
@@ -55,5 +62,19 @@ def request_verif(request_body,request_list):
                 data['errors'].append({"参数错误":p+"未传值"})
                 error = True
     if error:
-        return data
-    return
+        return None, data
+    if request_body.method == 'POST':
+        return json.loads(request_body.body.decode('utf-8')), None
+    return request_body.GET, None
+
+# def as_dict(models):
+	    # dict = {}
+	    # #exclude ManyToOneRel, which backwards to ForeignKey
+	    # field_names = [field.name for field in models._meta.get_fields() if 'ImageField' not in str(field)]
+	    # for name in field_names:
+		 #    field_instance = getattr(self, name)
+        # if field_instance.__class__.__name__ == 'ManyRelatedManager':
+		 #    dict[name] = field_instance.all()
+		 #    continue
+        # dict[name] = field_instance
+	    # return dict

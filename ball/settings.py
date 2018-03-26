@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 STATIC_URL = '/static/'
+
 import os
 STATIC_PATH = os.path.join( os.path.dirname(__file__) , 'static' )
 
@@ -36,6 +37,7 @@ MEDIA_URL = '/media/'
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
     'mycode.apps.MyBallConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
 ]
 
 # MIDDLEWARE = [

@@ -3,6 +3,8 @@ from django.db import models
 from mycode.models import define
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
+from django.utils import timezone
+import datetime
 
 class Account(models.Model):
 
@@ -21,18 +23,17 @@ class Account(models.Model):
     avatar = models.CharField('头像',max_length=200, default='')
     createTime = models.DateField(auto_created=True,auto_now_add=True)
 
+
     def __str__(self):
         return self.nickname
 
-    def json(self):
-        return model_to_dict(self)
 
 
 class Ball(models.Model):
 
     name = models.CharField(max_length=100)
     sub_title = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='image',default='user1.jpg')
+    image = models.ImageField(upload_to='images/ball',default='user1.jpg', blank=True, null=True)
 
 class Game(models.Model):
     game_create_user = models.ManyToManyField(Account,related_name='game_create_user', blank=True) #"创建用户",
@@ -41,11 +42,20 @@ class Game(models.Model):
     game_location =  models.CharField("场地", max_length=100, default='')  #"创建用户",
     game_location_detail = models.CharField("场地地点",max_length=200, default='') #"场地地点",
     game_price = models.IntegerField("费用", default=0)  #费用
-    game_start_time = models.DateTimeField("开始时间") #"开始时间"
-    game_end_time = models.DateTimeField("结束时间") #"结束时间"
+    game_start_time = models.DateTimeField("开始时间",default=timezone.now) #"开始时间"
+    game_end_time = models.DateTimeField("结束时间",default=timezone.now) #"结束时间"
     game_referee = models.BooleanField("裁判",default=False) #"裁判",
     game_number = models.IntegerField("球场人数",default=5) #"球场人数",
 
     game_place_condition  = models.CharField("场地条件", max_length=100, default='')  #"场地条件",
 
     game_user_list = models.ManyToManyField( Account,related_name='game_list_user',  blank=True) # "赴约人",
+
+
+class Appointment(models.Model):
+    user = models.ManyToManyField(Account,related_name='Appointment.user+', blank=True, null=True)
+    game = models.ManyToManyField(Game,related_name='game', blank=True, )
+
+class Commond(models.Model):
+    user = models.ManyToManyField(Account, related_name='Commond.user+', blank=True,null=True)
+    content = models.CharField(max_length=255)

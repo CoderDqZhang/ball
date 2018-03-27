@@ -20,9 +20,11 @@ GET_GAME_LIST = ['ball_id']
 
 GET_GAME_DETAIL = ['game_id']
 
+GET_GAME_APPLEMENT = ['game_id','openid','number_count']
+
 CREATE_GAME = ['openid','ball_id','game_location','game_location_detail',
                'game_price','game_start_time','game_end_time','game_referee',
-               'game_number','game_place_condition']
+               'game_number','game_place_condition','number']
 
 #时间戳转换
 def timeStamp_to_date(timeStamp):

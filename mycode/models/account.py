@@ -38,7 +38,7 @@ class Ball(models.Model):
 
 class Apointment(models.Model):
     number = models.CharField(max_length=100)
-    user = models.CharField(max_length=100)
+    user = models.ManyToManyField(Account, related_name='user+', blank=True, null=True)
 
 class Game(models.Model):
     game_create_user = models.ManyToManyField(Account,related_name='game_create_user', blank=True) #"创建用户",
@@ -56,7 +56,7 @@ class Game(models.Model):
 
     game_place_condition  = models.CharField("场地条件", max_length=100, default='')  #"场地条件",
 
-    game_user_list = models.ManyToManyField( Apointment,related_name='game_list_user',  blank=True) # "赴约人",
+    game_user_list = models.ManyToManyField( Apointment,related_name='game_list_user',  blank=True, null=True) # "赴约人",
 
 
 

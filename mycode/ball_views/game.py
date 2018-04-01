@@ -67,13 +67,18 @@ def game_detail(request):
                 data["game_detail"]['user_list'] = []
                 print(detail.game_user_list)
                 for x in user_list:
-                    data["game_detail"]['user_list'].append(model_to_dict(x))
+                    reponse = {}
+                    reponse['number_count'] = model_to_dict(x,exclude='user')
+                    #这个有问题
+                    reponse['user'] = model_to_dict(detail.game_create_user.first())
+                    data["game_detail"]['user_list'].append(reponse)
                 return JsonResponse(define.response("success", 0, None, data))
         else:
             return JsonResponse(define.response("success", 0, checkrequest))
     else:
         return JsonResponse(define.response("success",0,"请使用POST方式请求"))
     return JsonResponse(data);
+
 
 def game_create(request):
     if request.method == 'POST':
@@ -94,7 +99,8 @@ def game_create(request):
                 else:
                     game_referee = True
                 game = Game.objects.create(
-                    game_createTime = body['game_createTime'],
+                    game_title = body['game_title'],
+                    game_subtitle = body['game_subtitle'],
                     game_location=body['game_location'],
                     game_location_detail=body['game_location_detail'],
                     game_price=body['game_price'],
@@ -103,14 +109,20 @@ def game_create(request):
                     game_referee= game_referee,
                     game_number=body['game_number'],
                     game_place_condition=body['game_place_condition'],
+
                 )
                 response = model_to_dict(game, exclude=['game_create_user',
                                                                    'game_detail','game_user_list'])
 
-                apoint = Apointment.objects.create(number = 1, user = user)
+                # apointment = Apointment(
+                #     number = 1,
+                #     user = user
+                # )
+
+
                 game.game_create_user.add(user)
                 game.game_detail.add(ball)
-                game.game_user_list.add(apoint)
+                # game.game_user_list.add(apointment)
 
                 response['user'] = model_to_dict(user)
                 response['ball'] = model_to_dict(ball,exclude='image')
@@ -126,28 +138,70 @@ def game_create(request):
         return JsonResponse(define.response("success",0,"请使用POST方式请求",None))
     return JsonResponse(data);
 
-def game_apoint(request):
+def game_appointment(request):
     if request.method == 'POST':
         body, checkrequest = define.request_verif(request, define.GET_GAME_APPLEMENT)
         if checkrequest is None:
             game_id = body['game_id']
+            openid = body['openid']
+            number = body['number_count']
             detail = Game.objects.get(id=game_id)
             data = {}
             if detail is None:
                 return JsonResponse(define.response("success", 0, "球约不存在"))
             else:
-
+                add_user = Account.objects.get(openid=openid)
+                print(add_user)
+                list = Apointment()
+                list = Apointment.objects.create(
+                    number = number
+                )
+                list.user.add(add_user)
+                detail.game_user_list.add(list)
                 data["game_detail"] = model_to_dict(detail,
                                                     exclude=['game_create_user', 'game_detail', 'game_user_list',
                                                              ])
                 user = detail.game_create_user.first()
+
                 data["game_detail"]['user'] = model_to_dict(detail.game_create_user.first())
                 image = detail.game_detail.first().image
                 data["game_detail"]['ball'] = model_to_dict(detail.game_detail.first(), exclude='image')
                 user_list = detail.game_user_list.all()
                 data["game_detail"]['user_list'] = []
+
+                data["game_detail"]['user_list'].append(model_to_dict(list,exclude='user'))
                 for x in user_list:
-                    data["game_detail"]['user_list'].append(model_to_dict(x))
+                    data["game_detail"]['user_list'].append(model_to_dict(x,exclude='user'))
+                return JsonResponse(define.response("success", 0, None, data))
+        else:
+            return JsonResponse(define.response("success", 0, checkrequest))
+    else:
+        return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
+    return JsonResponse(data);
+
+
+def my_game_appointment(request):
+    if request.method == 'GET':
+        body, checkrequest = define.request_verif(request, define.GET_MY_GAME_APPLEMENT)
+        if checkrequest is None:
+            openid = body['openid']
+            detail = Game.objects.all().filter(game_create_user=Account.objects.filter(openid=openid))
+            print(detail)
+            data = {}
+            if detail is None:
+                return JsonResponse(define.response("success", 0, "球约不存在"))
+            else:
+                data["game_list"] = []
+                for x in detail:
+                    response = model_to_dict(x, exclude=['game_create_user', 'game_detail', 'game_user_list',
+                                                    ])
+                    user = x.game_create_user.first()
+                    print(response)
+                    response['user'] = model_to_dict(x.game_create_user.first())
+                    image = x.game_detail.first().image
+                    response['ball'] = model_to_dict(x.game_detail.first(), exclude='image')
+                    # response['ball']['image'] = image
+                    data["game_list"].append(response)
                 return JsonResponse(define.response("success", 0, None, data))
         else:
             return JsonResponse(define.response("success", 0, checkrequest))

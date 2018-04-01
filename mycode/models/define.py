@@ -12,7 +12,7 @@ GENDER = (
 
 UPDATA_USER_INFO = ['openid','nickname','age','gender',
                     'weight','height','ball_age','phone',
-                    'province','city','avatar']
+                    'province','city','avatar','good_point']
 
 GET_USER_INFO = ['openid']
 
@@ -22,7 +22,9 @@ GET_GAME_DETAIL = ['game_id']
 
 GET_GAME_APPLEMENT = ['game_id','openid','number_count']
 
-CREATE_GAME = ['openid','ball_id','game_location','game_location_detail',
+GET_MY_GAME_APPLEMENT = ['openid']
+
+CREATE_GAME = ['game_title','game_subtitle','openid','ball_id','game_location','game_location_detail',
                'game_price','game_start_time','game_end_time','game_referee',
                'game_number','game_place_condition','number']
 
@@ -53,9 +55,11 @@ def request_verif(request_body,request_list):
     data = {}
     error = False
     data['errors'] = []
+    jsonData = json.loads(request_body.body.decode('utf-8'))
     if request_body.method == 'POST':
         for p in request_list:
-            if p not in json.loads(request_body.body.decode('utf-8')):
+            print(p)
+            if p not in jsonData:
                 data['errors'].append({"参数错误":p+"未传值"})
                 error = True
     elif request_body.method == 'GET':
@@ -63,10 +67,11 @@ def request_verif(request_body,request_list):
             if p not in request_body.GET:
                 data['errors'].append({"参数错误":p+"未传值"})
                 error = True
-    if error:
-        return None, data
+
     if request_body.method == 'POST':
         return json.loads(request_body.body.decode('utf-8')), None
+    if error:
+        return None, data
     return request_body.GET, None
 
 # def as_dict(models):

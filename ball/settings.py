@@ -118,7 +118,7 @@ DATABASES = {
         'NAME': 'ball',
         'USER': 'root',
         'PASSWORD': 'root123',
-        'HOST': '127.0.0.1',
+        'HOST': '45.78.3.56',
         'PORT': '3306',
     },
     'innodb': {

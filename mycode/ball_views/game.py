@@ -1,3 +1,4 @@
+# coding=utf-8
 from django.http import JsonResponse
 from mycode.models import define
 import logging

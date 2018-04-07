@@ -8,8 +8,8 @@ import datetime
 
 class Account(models.Model):
 
-    user = models.OneToOneField(User)
-    nickname = models.CharField('用户名',max_length=200,on_delete=models.CASCADE)  # 用户名
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    nickname = models.CharField('用户名',max_length=200)  # 用户名
     sign = models.CharField('个性签名', max_length=200, blank=True)  # 用户名
     age = models.IntegerField('年龄',default=0)  # 年龄
     gender = models.IntegerField('性别',choices=define.GENDER, default=0)

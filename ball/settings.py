@@ -38,7 +38,8 @@ MEDIA_URL = '/media/'
 
 INSTALLED_APPS = [
     'rest_framework',
-    'mycode.apps.MyBallConfig',
+    'ball',
+    'mycode',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

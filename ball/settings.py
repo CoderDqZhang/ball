@@ -23,18 +23,25 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '52*p4fl8e0s4^6uwpyvuif!*(@3=olqda6rvwnurvgv%2h(rvn'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
 
 ALLOWED_HOSTS = ['*']
 
 STATIC_URL = '/static/'
 
-import os
 STATIC_PATH = os.path.join( os.path.dirname(__file__) , 'static' )
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
 MEDIA_URL = '/media/'
 # Application definition
+
+import socket
+if socket.get_hostname() == 'ballgame.pg':
+    DEBUG = True
+    #Development Server Settings go here
+else:
+    DEBUG = True
+    #Production Server Settings go here
 
 INSTALLED_APPS = [
     'rest_framework',

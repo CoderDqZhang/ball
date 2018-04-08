@@ -36,7 +36,7 @@ MEDIA_URL = '/media/'
 # Application definition
 
 import socket
-if socket.get_hostname() == 'ballgame.pg':
+if socket.gethostname() == 'ballgame.pg':
     DEBUG = True
     #Development Server Settings go here
 else:

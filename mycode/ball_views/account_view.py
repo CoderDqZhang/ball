@@ -1,5 +1,5 @@
 # Create your views here.
-
+# coding=utf-8
 from django.contrib.auth import login, authenticate
 from django.http import JsonResponse
 from django.contrib.auth.models import User

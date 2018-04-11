@@ -69,7 +69,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -128,10 +128,6 @@ DATABASES = {
         'PASSWORD': 'root123',
         'HOST': '127.0.0.1',
         'PORT': '3306',
-    },
-    'innodb': {
-        'ENGINE': 'django.db.backends.mysql',
-        'OPTIONS': { 'init_command': 'SET default_storage_engine=INNODB;' }
     }
 }
 
@@ -181,7 +177,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
+
 # LOGGING = {
 #     'version': 1,
 #     'disable_existing_loggers': True,

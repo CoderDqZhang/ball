@@ -26,20 +26,20 @@ def game_list(request):
     if request.method == 'POST':
         body,checkrequest = define.request_verif(request, define.GET_GAME_LIST)
         if checkrequest is None:
-            game_id = body['ball_id']
-            games = Game.objects.all().filter(game_detail=Ball.objects.filter(id=game_id))
+            ball_id = body['ball_id']
+            games = Game.objects.filter(game_detail__exact=ball_id)
+            print(games)
             data = {}
+            print(games)
             data["game_list"] = []
             for x in games:
                 response = model_to_dict(x, exclude=['game_create_user','game_detail','game_user_list',
                                                      ])
                 user = x.game_create_user.first()
-                print(response)
                 response['user'] = model_to_dict(x.game_create_user.first())
-                image = x.game_detail.first().image
-                response['ball'] = model_to_dict(x.game_detail.first(), exclude='image')
-                # response['ball']['image'] = image
-                data["game_list"].append(response)
+                # response['ball'].append(x.game_detail.values())
+                print(response);
+                data["game_list"].append(response);
             return JsonResponse(define.response("success", 0, None, data))
         else:
             return JsonResponse(define.response("success", 0, checkrequest))

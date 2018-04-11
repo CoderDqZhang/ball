@@ -69,6 +69,7 @@ def request_verif(request_body,request_list):
                 error = True
 
     if request_body.method == 'POST':
+        print(json.loads(request_body.body.decode('utf-8')))
         return json.loads(request_body.body.decode('utf-8')), None
     if error:
         return None, data

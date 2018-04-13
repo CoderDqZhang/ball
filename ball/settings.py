@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
+# -*- coding: utf-8 -*-
 
 import os
 
@@ -263,15 +264,14 @@ STATIC_URL = '/static/'
 #         }
 #     }
 # }
-
-SUIT_CONFIG = {  # suit页面配置
-    'ADMIN_NAME': '球约平台管理',  # 登录界面提示
-    'LIST_PER_PAGE': 20,  # 表中显示行数
-    'MENU': ({'label': u'用户管理', 'app': 'auth',
-              'icon': 'icon-lock',  # 显示左边菜单的图标
-              'models': ('auth.User', 'auth.Group')},  # 每一个字典表示左侧菜单的一栏
-             {'label': u'数据管理', 'app': 'mycode',
+# coding=utf-8
+SUIT_CONFIG = {  
+    'ADMIN_NAME': 'Ball Mangager',  
+    'LIST_PER_PAGE': 20,  
+    'MENU': ({'label': u'User Manager', 'app': 'auth',
+              'icon': 'icon-lock',  
+              'models': ('auth.User', 'auth.Group')},  
+             {'label': u'Data Manager', 'app': 'mycode',
               'models': ('mycode.Account', 'mycode.Ball', 'mycode.Game', 'mycode.Commond')},
              ),
-    # label表示name，app表示上边的install的app，models表示用了哪些models
 }

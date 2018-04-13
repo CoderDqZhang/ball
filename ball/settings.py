@@ -9,8 +9,12 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
+<<<<<<< HEAD
 # -*- coding: utf-8 -*-
 
+=======
+## coding=utf-8
+>>>>>>> 53d7041add245b923bb2e74d81b565e4711dbe5e
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -177,9 +181,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
+HERE = os.path.dirname(os.path.dirname(__file__))
+print(HERE)
 
+STATICFILES_DIRS = ( os.path.join(HERE, "../ball/ball/static/").replace('\\', '/'), )
 STATIC_URL = '/static/'
-
+STATIC_ROOT = os.path.join(HERE, "../ball/mycode/static").replace('\\', '/')
 #-*- coding: utf-8 -*-
 
 # LOGGING = {
@@ -264,6 +271,7 @@ STATIC_URL = '/static/'
 #         }
 #     }
 # }
+<<<<<<< HEAD
 # coding=utf-8
 SUIT_CONFIG = {  
     'ADMIN_NAME': 'Ball Mangager',  
@@ -275,3 +283,16 @@ SUIT_CONFIG = {
               'models': ('mycode.Account', 'mycode.Ball', 'mycode.Game', 'mycode.Commond')},
              ),
 }
+=======
+
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'Ball Manager',
+    'LIST_PER_PAGE': 20,
+    'MENU': ({'label': u'User Manager', 'app': 'auth',
+              'icon': 'icon-lock',
+              'models': ('auth.User', 'auth.Group')},
+             {'label': u'Data Manager', 'app': 'mycode',
+              'models': ('mycode.Account', 'mycode.Ball', 'mycode.Game', 'mycode.Commond')},
+             ),
+}
+>>>>>>> 53d7041add245b923bb2e74d81b565e4711dbe5e

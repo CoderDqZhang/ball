@@ -1,6 +1,7 @@
 /* LOGIN FORM */
 
 body.login {
+<<<<<<< HEAD
     background: #f8f8f8;
 }
 
@@ -29,17 +30,40 @@ body.login {
     width: 28em;
     min-width: 300px;
     margin: 100px auto;
+=======
+    background: #eee;
+}
+
+.login #container {
+    background: white;
+    border: 1px solid #ccc;
+    width: 28em;
+    min-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 100px;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 }
 
 .login #content-main {
     width: 100%;
 }
 
+<<<<<<< HEAD
+=======
+.login form {
+    margin-top: 1em;
+}
+
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 .login .form-row {
     padding: 4px 0;
     float: left;
     width: 100%;
+<<<<<<< HEAD
     border-bottom: none;
+=======
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 }
 
 .login .form-row label {
@@ -52,7 +76,11 @@ body.login {
 
 .login .form-row #id_username, .login .form-row #id_password {
     clear: both;
+<<<<<<< HEAD
     padding: 8px;
+=======
+    padding: 6px;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
     width: 100%;
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
@@ -67,10 +95,13 @@ body.login {
 .login .submit-row {
     clear: both;
     padding: 1em 0 0 9.4em;
+<<<<<<< HEAD
     margin: 0;
     border: none;
     background: none;
     text-align: left;
+=======
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 }
 
 .login .password-reset-link {

@@ -12,17 +12,31 @@
 .change-list .hiddenfields { display:none; }
 
 .change-list .filtered table {
+<<<<<<< HEAD
     border-right: none;
+=======
+    border-right: 1px solid #ddd;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 }
 
 .change-list .filtered {
     min-height: 400px;
 }
 
+<<<<<<< HEAD
 .change-list .filtered .results, .change-list .filtered .paginator,
 .filtered #toolbar, .filtered div.xfull {
     margin-right: 280px;
     width: auto;
+=======
+.change-list .filtered {
+    background: white url(../img/changelist-bg.gif) top right repeat-y !important;
+}
+
+.change-list .filtered .results, .change-list .filtered .paginator, .filtered #toolbar, .filtered div.xfull {
+    margin-right: 160px !important;
+    width: auto !important;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 }
 
 .change-list .filtered table tbody th {
@@ -34,16 +48,33 @@
 }
 
 #changelist .toplinks {
+<<<<<<< HEAD
     border-bottom: 1px solid #ddd;
+=======
+    border-bottom: 1px solid #ccc !important;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 }
 
 #changelist .paginator {
     color: #666;
+<<<<<<< HEAD
     border-bottom: 1px solid #eee;
     background: #fff;
     overflow: hidden;
 }
 
+=======
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    background: white url(../img/nav-bg.gif) 0 180% repeat-x;
+    overflow: hidden;
+}
+
+.change-list .filtered .paginator {
+    border-right: 1px solid #ddd;
+}
+
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 /* CHANGELIST TABLES */
 
 #changelist table thead th {
@@ -57,8 +88,22 @@
     text-align: center;
 }
 
+<<<<<<< HEAD
 #changelist table tbody td.action-checkbox {
     text-align: center;
+=======
+#changelist table tbody td, #changelist table tbody th {
+    border-left: 1px solid #ddd;
+}
+
+#changelist table tbody td:first-child, #changelist table tbody th:first-child {
+    border-left: 0;
+    border-right: 1px solid #ddd;
+}
+
+#changelist table tbody td.action-checkbox {
+    text-align:center;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 }
 
 #changelist table tfoot {
@@ -68,15 +113,22 @@
 /* TOOLBAR */
 
 #changelist #toolbar {
+<<<<<<< HEAD
     padding: 8px 10px;
     margin-bottom: 15px;
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
     background: #f8f8f8;
+=======
+    padding: 3px;
+    border-bottom: 1px solid #ddd;
+    background: #e1e1e1 url(../img/nav-bg.gif) top left repeat-x;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
     color: #666;
 }
 
 #changelist #toolbar form input {
+<<<<<<< HEAD
     border-radius: 4px;
     font-size: 14px;
     padding: 5px;
@@ -110,11 +162,22 @@
 #changelist #toolbar form input[type="submit"]:focus,
 #changelist #toolbar form input[type="submit"]:hover {
     border-color: #999;
+=======
+    font-size: 11px;
+    padding: 1px 2px;
+}
+
+#changelist #toolbar form #searchbar {
+    padding: 2px;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 }
 
 #changelist #changelist-search img {
     vertical-align: middle;
+<<<<<<< HEAD
     margin-right: 4px;
+=======
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 }
 
 /* FILTER COLUMN */
@@ -124,13 +187,20 @@
     top: 0;
     right: 0;
     z-index: 1000;
+<<<<<<< HEAD
     width: 240px;
     background: #f8f8f8;
     border-left: none;
+=======
+    width: 160px;
+    border-left: 1px solid #ddd;
+    background: #efefef;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
     margin: 0;
 }
 
 #changelist-filter h2 {
+<<<<<<< HEAD
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -155,6 +225,21 @@
 #changelist-filter ul:last-child {
     border-bottom: none;
     padding-bottom: none;
+=======
+    font-size: 11px;
+    padding: 2px 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+#changelist-filter h3 {
+    font-size: 12px;
+    margin-bottom: 0;
+}
+
+#changelist-filter ul {
+    padding-left: 0;
+    margin-left: 10px;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 }
 
 #changelist-filter li {
@@ -164,6 +249,7 @@
 }
 
 #changelist-filter a {
+<<<<<<< HEAD
     display: block;
     color: #999;
     text-overflow: ellipsis;
@@ -184,15 +270,40 @@
 #changelist-filter li.selected a:focus,
 #changelist-filter li.selected a:hover {
     color: #036;
+=======
+    color: #999;
+}
+
+#changelist-filter a:hover {
+    color: #036;
+}
+
+#changelist-filter li.selected {
+    border-left: 5px solid #ccc;
+    padding-left: 5px;
+    margin-left: -10px;
+}
+
+#changelist-filter li.selected a {
+    color: #5b80b2 !important;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 }
 
 /* DATE DRILLDOWN */
 
 .change-list ul.toplinks {
     display: block;
+<<<<<<< HEAD
     float: left;
     padding: 0;
     margin: 0;
+=======
+    background: white url(../img/nav-bg-reverse.gif) 0 -10px repeat-x;
+    border-top: 1px solid white;
+    float: left;
+    padding: 0 !important;
+    margin: 0 !important;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
     width: 100%;
 }
 
@@ -207,7 +318,10 @@
     color: #999;
 }
 
+<<<<<<< HEAD
 .change-list ul.toplinks .date-back a:focus,
+=======
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 .change-list ul.toplinks .date-back a:hover {
     color: #036;
 }
@@ -215,7 +329,11 @@
 /* PAGINATOR */
 
 .paginator {
+<<<<<<< HEAD
     font-size: 13px;
+=======
+    font-size: 11px;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
     padding-top: 10px;
     padding-bottom: 10px;
     line-height: 22px;
@@ -225,6 +343,7 @@
 
 .paginator a:link, .paginator a:visited {
     padding: 2px 6px;
+<<<<<<< HEAD
     background: #79aec8;
     text-decoration: none;
     color: #fff;
@@ -243,6 +362,25 @@
 }
 
 .paginator .end {
+=======
+    border: solid 1px #ccc;
+    background: white;
+    text-decoration: none;
+}
+
+.paginator a.showall {
+    padding: 0 !important;
+    border: none !important;
+}
+
+.paginator a.showall:hover {
+    color: #036 !important;
+    background: transparent !important;
+}
+
+.paginator .end {
+    border-width: 2px !important;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
     margin-right: 6px;
 }
 
@@ -253,21 +391,36 @@
     vertical-align: top;
 }
 
+<<<<<<< HEAD
 .paginator a:focus, .paginator a:hover {
     color: white;
     background: #036;
+=======
+.paginator a:hover {
+    color: white;
+    background: #5b80b2;
+    border-color: #036;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 }
 
 /* ACTIONS */
 
 .filtered .actions {
+<<<<<<< HEAD
     margin-right: 280px;
     border-right: none;
+=======
+    margin-right: 160px !important;
+    border-right: 1px solid #ddd;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 }
 
 #changelist table input {
     margin: 0;
+<<<<<<< HEAD
     vertical-align: baseline;
+=======
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 }
 
 #changelist table tbody tr.selected {
@@ -275,12 +428,20 @@
 }
 
 #changelist .actions {
+<<<<<<< HEAD
     padding: 10px;
     background: #fff;
     border-top: none;
     border-bottom: none;
     line-height: 24px;
     color: #999;
+=======
+    color: #999;
+    padding: 3px;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #ddd;
+    background: white url(../img/nav-bg-reverse.gif) 0 -10px repeat-x;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 }
 
 #changelist .actions.selected {
@@ -293,7 +454,11 @@
 #changelist .actions span.action-counter,
 #changelist .actions span.clear,
 #changelist .actions span.question {
+<<<<<<< HEAD
     font-size: 13px;
+=======
+    font-size: 11px;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
     margin: 0 0.5em;
     display: none;
 }
@@ -303,6 +468,7 @@
 }
 
 #changelist .actions select {
+<<<<<<< HEAD
     vertical-align: top;
     height: 24px;
     background: none;
@@ -341,4 +507,23 @@
 
 #changelist .actions .button:focus, #changelist .actions .button:hover {
     border-color: #999;
+=======
+    border: 1px solid #aaa;
+    margin-left: 0.5em;
+    padding: 1px 2px;
+}
+
+#changelist .actions label {
+    font-size: 11px;
+    margin-left: 0.5em;
+}
+
+#changelist #action-toggle {
+    display: none;
+}
+
+#changelist .actions .button {
+    font-size: 11px;
+    padding: 1px 2px;
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 }

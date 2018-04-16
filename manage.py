@@ -1,8 +1,18 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import os
 import sys
+<<<<<<< HEAD
 reload(sys)
 sys.setdefaultencoding('utf8')
+=======
+
+import importlib
+importlib.reload(sys)
+
+sys.setdefaultencoding('utf8')
+
+>>>>>>> 7c72ceb493cd818bbe206050de3c2bb4cffa99d6
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ball.settings")
     try:

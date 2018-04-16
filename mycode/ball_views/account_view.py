@@ -11,6 +11,9 @@ import logging
 from mycode.models import define
 from mycode.models.serializers import AccountSerializer
 import json
+import sys
+import importlib
+importlib.reload(sys)
 
 # def verify_user(request):
 #     if request.method == 'POST':

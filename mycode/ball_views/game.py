@@ -6,6 +6,9 @@ from django.forms.models import model_to_dict
 from mycode.models.account import Ball,Game,Account,Apointment
 from django.core import serializers
 import json
+import sys
+import importlib
+importlib.reload(sys)
 
 logger = logging.getLogger(__name__)  # 刚才在setting.py中配置的logger
 

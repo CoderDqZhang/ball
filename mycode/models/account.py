@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.utils import timezone
 import datetime
+import sys
+import importlib
+importlib.reload(sys)
 
 class Account(models.Model):
 

@@ -3,7 +3,9 @@ from mycode.WXBizDataCrypt import WXBizDataCrypt
 import requests
 import string
 import random
-
+import sys
+import importlib
+importlib.reload(sys)
 
 def decrypt(*userinfo):
     # print('')

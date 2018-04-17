@@ -66,9 +66,9 @@ def game_detail(request):
                                                   ])
                 user = detail.game_create_user.first()
                 data["game_detail"]['user'] = model_to_dict(detail.game_create_user.first())
-                image = detail.game_detail.first().image
-                print(image)
-                data["game_detail"]['ball'] = model_to_dict(detail.game_detail.first(), exclude='image')
+                image = detail.game_detail.get().image.name
+                data["game_detail"]['ball'] = model_to_dict(detail.game_detail.get(), exclude='image')
+                data["game_detail"]['ball']['image'] = image
                 user_list = detail.game_user_list.all()
                 data["game_detail"]['user_list'] = []
                 print(detail.game_user_list)
@@ -192,7 +192,6 @@ def my_game_appointment(request):
         if checkrequest is None:
             openid = body['openid']
             detail = Game.objects.all().filter(game_create_user=Account.objects.filter(openid=openid))
-            print(detail)
             data = {}
             if detail is None:
                 return JsonResponse(define.response("success", 0, "球约不存在"))
@@ -202,11 +201,10 @@ def my_game_appointment(request):
                     response = model_to_dict(x, exclude=['game_create_user', 'game_detail', 'game_user_list',
                                                     ])
                     user = x.game_create_user.first()
-                    print(response)
                     response['user'] = model_to_dict(x.game_create_user.first())
                     image = x.game_detail.first().image
                     response['ball'] = model_to_dict(x.game_detail.first(), exclude='image')
-                    # response['ball']['image'] = image
+                    response['ball']['image'] = image
                     data["game_list"].append(response)
                 return JsonResponse(define.response("success", 0, None, data))
         else:

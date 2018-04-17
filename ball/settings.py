@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'ball',
     'mycode',
-    'bootstrap3',
+    # 'bootstrap3',
     'suit',
     'django.contrib.admin',
     'django.contrib.auth',

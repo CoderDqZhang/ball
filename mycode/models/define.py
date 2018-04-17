@@ -16,6 +16,10 @@ UPDATA_USER_INFO = ['openid','nickname','age','gender',
 
 GET_USER_INFO = ['openid']
 
+GET_USER_COMMOND = ['openid']
+
+COMMOND_USER_INFO = ['openid','targid','content','rank']
+
 GET_GAME_LIST = ['ball_id']
 
 GET_GAME_DETAIL = ['game_id']

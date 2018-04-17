@@ -10,6 +10,8 @@ urlpatterns = [
     url('^WeChatlogin/',account_view.verify_user),
     url('^updateUserInfo/',account_view.update_user_info),
     url('^getUserInfo/',account_view.get_user_info),
+    url('^Commond/',account_view.conmmend_user),
+    url('^UserCommond/',account_view.get_user_conmmend),
 #ball
     url('^ballList/',game.ball_list),
 #game

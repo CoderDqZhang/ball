@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.forms.models import model_to_dict
-from mycode.models.account import Account
+from mycode.models.account import Account,Commond
 from .checkuser import checkdata
 import logging
 from mycode.models import define
@@ -183,6 +183,53 @@ def get_user_info(request):
     else:
         return JsonResponse(define.response("success", 0, "请使用GET方式请求"))
     return JsonResponse(data)
+
+def conmmend_user(request):
+    if request.method == 'POST':
+        body, checkrequest = define.request_verif(request, define.COMMOND_USER_INFO)
+        if checkrequest is None:
+
+            data = {}
+            commond = Commond.objects.create(
+                content=body['content'],
+                rank = body['rank'],
+            )
+            user = Account.objects.all().get(openid=body['openid'])
+            targuser = Account.objects.all().get(openid=body['targid'])
+            commond.user.add(user)
+            commond.tag_user.add(targuser)
+            commond.save()
+            data['content'] = body['content']
+            data['rank'] = body['rank']
+            data['user'] = model_to_dict(targuser)
+            data['targuser'] = model_to_dict(user)
+            return JsonResponse(define.response("success", 0, None, data))
+        else:
+            return JsonResponse(define.response("success", 0, checkrequest))
+    else:
+        return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
+    return JsonResponse(data);
+
+def get_user_conmmend(request):
+    if request.method == 'POST':
+        body, checkrequest = define.request_verif(request, define.GET_USER_COMMOND)
+        if checkrequest is None:
+            openid = body['openid']
+            details = Commond.objects.filter(user__exact=openid)
+            print(details)
+            data = {}
+            data["commonds"] = []
+            for x in details:
+                response = model_to_dict(x, exclude=['user','tag_user'])
+                response['user'] = model_to_dict(x.user.first())
+                response['tag_user'] = model_to_dict(x.tag_user.first())
+                data["commonds"].append(response);
+            return JsonResponse(define.response("success", 0, None, data))
+        else:
+            return JsonResponse(define.response("success", 0, checkrequest))
+    else:
+        return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
+    return JsonResponse(data);
 
 def test(request):
     return JsonResponse({'success':'成功'})

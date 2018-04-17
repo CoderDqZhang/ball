@@ -42,6 +42,7 @@ def game_list(request):
                 response['user'] = model_to_dict(x.game_create_user.first())
                 # response['ball'].append(x.game_detail.values())
                 print(response);
+
                 data["game_list"].append(response);
             return JsonResponse(define.response("success", 0, None, data))
         else:
@@ -66,6 +67,7 @@ def game_detail(request):
                 user = detail.game_create_user.first()
                 data["game_detail"]['user'] = model_to_dict(detail.game_create_user.first())
                 image = detail.game_detail.first().image
+                print(image)
                 data["game_detail"]['ball'] = model_to_dict(detail.game_detail.first(), exclude='image')
                 user_list = detail.game_user_list.all()
                 data["game_detail"]['user_list'] = []

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'ball',
     'mycode',
+    'grappelli',
     # 'bootstrap3',
     'suit',
     'django.contrib.admin',

@@ -71,11 +71,10 @@ def game_detail(request):
                 user_list = detail.game_user_list.all()
                 data["game_detail"]['user_list'] = []
                 print(detail.game_user_list)
+                reponse = {}
                 for x in user_list:
-                    reponse = {}
                     reponse['number_count'] = model_to_dict(x,exclude='user')
-                    #这个有问题
-                    reponse['user'] = model_to_dict(detail.game_create_user.first())
+                    reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all().first().openid))
                     data["game_detail"]['user_list'].append(reponse)
                 return JsonResponse(define.response("success", 0, None, data))
         else:
@@ -156,8 +155,11 @@ def game_appointment(request):
             if detail is None:
                 return JsonResponse(define.response("success", 0, "球约不存在"))
             else:
+                for x in detail.game_user_list.all():
+                    if x.user.all().first().openid == openid:
+                        data['message'] = "已经赴约了"
+                        return JsonResponse(define.response("success", 0, None, data))
                 add_user = Account.objects.get(openid=openid)
-                print(add_user)
                 list = Apointment()
                 list = Apointment.objects.create(
                     number = number
@@ -178,6 +180,7 @@ def game_appointment(request):
                 data["game_detail"]['user_list'].append(model_to_dict(list,exclude='user'))
                 for x in user_list:
                     data["game_detail"]['user_list'].append(model_to_dict(x,exclude='user'))
+
                 return JsonResponse(define.response("success", 0, None, data))
         else:
             return JsonResponse(define.response("success", 0, checkrequest))
@@ -219,8 +222,9 @@ def search(request):
         body, checkrequest = define.request_verif(request, define.GET_GAME_LIST_KEYWORD)
         if checkrequest is None:
             keyword = body['keyword']
+            ball_id = body['ball_id']
             print(keyword)
-            games = Game.objects.filter(game_title__icontains=keyword)
+            games = Game.objects.filter(game_title__icontains=keyword,game_detail__exact=ball_id)
             print(games)
             data = {}
             data["game_list"] = []

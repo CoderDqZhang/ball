@@ -28,8 +28,6 @@ class Account(models.Model):
     createTime = models.DateField(auto_created=True,auto_now_add=True)
     good_point = models.CharField('擅长',max_length=200, blank=True)
 
-    def __str__(self):
-        return self.nickname
 
 
 
@@ -39,12 +37,18 @@ class Ball(models.Model):
     sub_title = models.CharField(max_length=100)
     image = models.ImageField(upload_to='images/ball',default='user1.jpg', blank=True, null=True)
 
+    def __str__(self):
+        return self.name
+
     def __meta__(self):
         return
 
 class Apointment(models.Model):
     number = models.CharField(max_length=100)
-    user = models.ManyToManyField(Account, related_name='user+', blank=True, null=True)
+    user = models.ManyToManyField(Account, related_name='game_list_user', blank=True, null=True)
+
+    def __meta__(self):
+        return
 
 class Game(models.Model):
     game_create_user = models.ManyToManyField(Account,related_name='game_create_user', blank=True) #"创建用户",

@@ -156,6 +156,7 @@ def game_appointment(request):
                 return JsonResponse(define.response("success", 0, "球约不存在"))
             else:
                 for x in detail.game_user_list.all():
+                    print(x.user.all().first().openid)
                     if x.user.all().first().openid == openid:
                         data['message'] = "已经赴约了"
                         return JsonResponse(define.response("success", 0, None, data))

@@ -212,3 +212,30 @@ def my_game_appointment(request):
     else:
         return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
     return JsonResponse(data);
+
+
+def search(request):
+    if request.method == 'POST':
+        body, checkrequest = define.request_verif(request, define.GET_GAME_LIST_KEYWORD)
+        if checkrequest is None:
+            keyword = body['keyword']
+            print(keyword)
+            games = Game.objects.filter(game_title__icontains=keyword)
+            print(games)
+            data = {}
+            data["game_list"] = []
+            for x in games:
+                response = model_to_dict(x, exclude=['game_create_user', 'game_detail', 'game_user_list',
+                                                     ])
+                user = x.game_create_user.first()
+                response['user'] = model_to_dict(x.game_create_user.first())
+                response['ball'] = model_to_dict(x.game_detail.first(), exclude='image')
+                response['ball']['image'] = define.MEDIAURL + x.game_detail.first().image.name
+                data["game_list"].append(response)
+            return JsonResponse(define.response("success", 0, None, data))
+        else:
+            return JsonResponse(define.response("success", 0, checkrequest))
+    else:
+        return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
+    return JsonResponse(data);
+

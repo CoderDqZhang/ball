@@ -127,7 +127,7 @@ def update_user_info(request):
                 user.gender = body['gender']
                 user.weight = body['weight']
                 user.height = body['height']
-                user.game_age = body['ball_age']
+                user.game_age = body['game_age']
                 user.phone = body['phone']
                 user.province = body['province']
                 user.city = body['city']
@@ -145,9 +145,11 @@ def update_user_info(request):
         return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
     return JsonResponse(data)
 
+
 def get_user_info(request):
-    if request.method == 'GET':
-        openid = request.GET.get('openid')
+    if request.method == 'POST':
+        openid = json.loads(request.body.decode('utf-8'))['openid']
+        print(openid)
         try:
             user = Account.objects.get(openid=openid)
             body, checkrequest = define.request_verif(request,define.GET_USER_INFO)
@@ -161,27 +163,7 @@ def get_user_info(request):
         except Account.DoesNotExist:
             return JsonResponse(define.response("success", 0, "用户不存在",None))
     else:
-        return JsonResponse(define.response("success", 0, "请使用GET方式请求"))
-    return JsonResponse(data)
-
-
-def get_user_info(request):
-    if request.method == 'GET':
-        openid = request.GET.get('openid')
-        try:
-            user = Account.objects.get(openid=openid)
-            body, checkrequest = define.request_verif(request,define.GET_USER_INFO)
-            if checkrequest is None:
-                data = {}
-                # return  AccountSerializer
-                data['user'] = model_to_dict(user)
-                return  JsonResponse(define.response("success", 0, None, data))
-            else:
-                return JsonResponse(define.response("success", 0, checkrequest))
-        except Account.DoesNotExist:
-            return JsonResponse(define.response("success", 0, "用户不存在",None))
-    else:
-        return JsonResponse(define.response("success", 0, "请使用GET方式请求"))
+        return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
     return JsonResponse(data)
 
 def conmmend_user(request):

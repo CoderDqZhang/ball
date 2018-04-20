@@ -4,6 +4,8 @@ import pytz
 import time
 import json
 
+MEDIAURL = 'http://127.0.0.1:8000/media/'
+
 GENDER = (
         (1, '男'),
         (2, '女'),
@@ -11,7 +13,7 @@ GENDER = (
     )
 
 UPDATA_USER_INFO = ['openid','nickname','age','gender',
-                    'weight','height','ball_age','phone',
+                    'weight','height','game_age','phone',
                     'province','city','avatar','good_point']
 
 GET_USER_INFO = ['openid']
@@ -73,7 +75,6 @@ def request_verif(request_body,request_list):
                 error = True
 
     if request_body.method == 'POST':
-        print(json.loads(request_body.body.decode('utf-8')))
         return json.loads(request_body.body.decode('utf-8')), None
     if error:
         return None, data

@@ -22,6 +22,8 @@ def ball_list(request):
         data = define.response("success",0)
         data["data"] = []
         for x in balls:
+            print(x)
+            x['image'] = define.MEDIAURL + x['image']
             data["data"].append(x)
     return JsonResponse(data)
 
@@ -37,6 +39,7 @@ def game_list(request):
                 response = model_to_dict(x, exclude=['game_create_user','game_detail','game_user_list',
                                                      ])
                 user = x.game_create_user.first()
+                print(response)
                 response['user'] = model_to_dict(x.game_create_user.first())
 
                 data["game_list"].append(response);
@@ -62,7 +65,7 @@ def game_detail(request):
                                                   ])
                 user = detail.game_create_user.first()
                 data["game_detail"]['user'] = model_to_dict(detail.game_create_user.first())
-                image = detail.game_detail.get().image.name
+                image = define.MEDIAURL + detail.game_detail.get().image.name
                 data["game_detail"]['ball'] = model_to_dict(detail.game_detail.get(), exclude='image')
                 data["game_detail"]['ball']['image'] = image
                 user_list = detail.game_user_list.all()
@@ -128,6 +131,7 @@ def game_create(request):
 
                 response['user'] = model_to_dict(user)
                 response['ball'] = model_to_dict(ball,exclude='image')
+                response['ball']['image'] = ball.image.name
                 data['game'] = response
                 return JsonResponse(define.response("success", 0, data))
             else:
@@ -200,7 +204,7 @@ def my_game_appointment(request):
                     user = x.game_create_user.first()
                     response['user'] = model_to_dict(x.game_create_user.first())
                     response['ball'] = model_to_dict(x.game_detail.first(), exclude='image')
-                    response['ball']['image'] = x.game_detail.first().image.name
+                    response['ball']['image'] = define.MEDIAURL + x.game_detail.first().image.name
                     data["game_list"].append(response)
                 return JsonResponse(define.response("success", 0, None, data))
         else:

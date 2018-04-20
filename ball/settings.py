@@ -166,13 +166,15 @@ GEOS_LIBRARY_PATH = '/home/bob/local/lib/libgeos_c.so'
 
 LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
+
+USE_TZ = False
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+
 
 
 # Static files (CSS, JavaScript, Images)

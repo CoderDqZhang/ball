@@ -28,7 +28,8 @@ class Account(models.Model):
     createTime = models.DateField(auto_created=True,auto_now_add=True)
     good_point = models.CharField('擅长',max_length=200, blank=True)
 
-
+    def __str__(self):
+        return self.nickname
 
 
 class Ball(models.Model):
@@ -46,6 +47,9 @@ class Ball(models.Model):
 class Apointment(models.Model):
     number = models.CharField(max_length=100)
     user = models.ManyToManyField(Account, related_name='game_list_user', blank=True, null=True)
+
+
+
 
     def __meta__(self):
         return

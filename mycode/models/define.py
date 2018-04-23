@@ -24,7 +24,7 @@ COMMOND_USER_INFO = ['openid','targid','content','rank']
 
 GET_GAME_LIST = ['ball_id']
 
-GET_GAME_DETAIL = ['game_id']
+GET_GAME_DETAIL = ['game_id','openid']
 
 GET_GAME_APPLEMENT = ['game_id','openid','number_count']
 

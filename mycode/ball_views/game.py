@@ -55,6 +55,7 @@ def game_detail(request):
         body,checkrequest = define.request_verif(request, define.GET_GAME_DETAIL)
         if checkrequest is None:
             game_id = body['game_id']
+            openid = body['openid']
             detail = Game.objects.get(id=game_id)
             data = {}
             if detail is None:
@@ -70,12 +71,15 @@ def game_detail(request):
                 data["game_detail"]['ball']['image'] = image
                 user_list = detail.game_user_list.all()
                 data["game_detail"]['user_list'] = []
+                data["game_detail"]['appoint_ment'] = False
                 print(detail.game_user_list)
                 reponse = {}
                 for x in user_list:
                     reponse['number_count'] = model_to_dict(x,exclude='user')
                     reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all().first().openid))
                     data["game_detail"]['user_list'].append(reponse)
+                    if reponse['user']['openid'] == openid:
+                        data["game_detail"]['appoint_ment'] = True
                 return JsonResponse(define.response("success", 0, None, data))
         else:
             return JsonResponse(define.response("success", 0, checkrequest))

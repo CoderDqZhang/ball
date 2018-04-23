@@ -6,6 +6,8 @@ from django.forms.models import model_to_dict
 from mycode.models.account import Ball,Game,Account,Apointment
 from django.core import serializers
 import json
+from django.utils import timezone
+import datetime
 import sys
 import importlib
 importlib.reload(sys)
@@ -241,8 +243,7 @@ def my_game_appointment(request):
         body, checkrequest = define.request_verif(request, define.GET_MY_GAME_APPLEMENT)
         if checkrequest is None:
             openid = body['openid']
-            detail = Game.objects.all().filter(game_create_user__exact=openid)
-            print(detail)
+            detail = Game.objects.all().filter(game_create_user__exact=openid).order_by('-game_end_time')
             data = {}
             if detail is None:
                 return JsonResponse(define.response("success", 0, "球约不存在"))
@@ -251,6 +252,10 @@ def my_game_appointment(request):
                 for x in detail:
                     response = model_to_dict(x, exclude=['game_create_user', 'game_detail', 'game_user_list',
                                                     ])
+                    if timezone.now() < x.game_end_time:
+                        response['game_status'] = '进行中'
+                    else:
+                        response['game_status'] = '结束'
                     user = x.game_create_user.first()
                     response['user'] = model_to_dict(x.game_create_user.first())
                     response['ball'] = model_to_dict(x.game_detail.first(), exclude='image')
@@ -270,9 +275,7 @@ def search(request):
         if checkrequest is None:
             keyword = body['keyword']
             ball_id = body['ball_id']
-            print(keyword)
             games = Game.objects.filter(game_title__icontains=keyword,game_detail__exact=ball_id)
-            print(games)
             data = {}
             data["game_list"] = []
             for x in games:

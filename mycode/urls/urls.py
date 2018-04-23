@@ -20,6 +20,8 @@ urlpatterns = [
     url('^gameDetail/',game.game_detail),
     url('^gameAppointment/',game.game_appointment),
     url('^myGameAppoinment/',game.my_game_appointment),
+    url('^gameCancelAppoinment/',game.cancel_game_appointment),
     url('^gameSearch/',game.search),
+
 
 ]

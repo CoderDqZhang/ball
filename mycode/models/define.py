@@ -30,6 +30,8 @@ GET_GAME_APPLEMENT = ['game_id','openid','number_count']
 
 GET_MY_GAME_APPLEMENT = ['openid']
 
+CANCEL_MY_GAME_APPLEMENT = ['game_id','openid']
+
 GET_GAME_LIST_KEYWORD = ['keyword','ball_id']
 
 CREATE_GAME = ['game_title','game_subtitle','openid','ball_id','game_location','game_location_detail',

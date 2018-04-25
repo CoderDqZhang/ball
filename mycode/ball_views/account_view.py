@@ -236,4 +236,5 @@ def get_user_other_conmmend(request):
     return JsonResponse(data);
 
 def test(request):
+    define.getaddress('朝阳公园')
     return JsonResponse({'success':'成功'})

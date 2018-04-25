@@ -61,6 +61,8 @@ class Game(models.Model):
     game_title = models.CharField("标题", max_length=100, default='',blank=True)  # "创建用户",
     game_subtitle = models.CharField("副标题", max_length=100, default='', blank=True)  # "创建用户",
     game_location =  models.CharField("场地", max_length=100, default='')  #"创建用户",
+    game_latitude = models.FloatField('经度',max_length=100,default=0.0)
+    game_longitude = models.FloatField('纬度', max_length=100, default=0.0)
     game_location_detail = models.CharField("场地地点",max_length=200, default='') #"场地地点",
     game_price = models.IntegerField("费用", default=0)  #费用
     game_start_time = models.DateTimeField("开始时间",default=timezone.now) #"开始时间"

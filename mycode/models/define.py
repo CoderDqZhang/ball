@@ -3,6 +3,7 @@ import datetime
 import pytz
 import time
 import json
+import urllib.request
 
 MEDIAURL = 'http://127.0.0.1:8000/media/'
 
@@ -96,3 +97,17 @@ def request_verif(request_body,request_list):
 		 #    continue
         # dict[name] = field_instance
 	    # return dict
+
+def getaddress(address):
+    address = urllib.request.quote(address)
+    str = 'http://api.map.baidu.com/geocoder/v2/' \
+          '?address='+ address +'&output=json&' \
+          'ak=fBTBbXkPXNGR2jVxhLnGNpr94ZMw5zmc&callback=showLocation'
+    data = urllib.request.urlopen(str)
+    data1 = data.read()
+    data2 = data1.decode("utf-8")
+    data3 = data2.split(')')
+    data4 = data3[0].split('(')
+    JSON_DATA = json.loads(data4[1])
+    print(JSON_DATA['result']['location'])
+    return JSON_DATA['result']['location']

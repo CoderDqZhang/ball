@@ -108,10 +108,13 @@ def game_create(request):
                     game_referee = False
                 else:
                     game_referee = True
+                address = define.getaddress(body['game_location'])
                 game = Game.objects.create(
                     game_title = body['game_title'],
                     game_subtitle = body['game_subtitle'],
                     game_location=body['game_location'],
+                    game_latitude = address['lat'],
+                    game_longitude = address['lng'],
                     game_location_detail=body['game_location_detail'],
                     game_price=body['game_price'],
                     game_start_time= define.timeStamp_to_date(body['game_start_time']),

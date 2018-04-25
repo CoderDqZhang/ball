@@ -215,5 +215,25 @@ def get_user_conmmend(request):
         return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
     return JsonResponse(data);
 
+def get_user_other_conmmend(request):
+    if request.method == 'POST':
+        body, checkrequest = define.request_verif(request, define.GET_USER_COMMOND)
+        if checkrequest is None:
+            openid = body['openid']
+            details = Commond.objects.filter(tag_user__exact=openid)
+            data = {}
+            data["commonds"] = []
+            for x in details:
+                response = model_to_dict(x, exclude=['user','tag_user'])
+                response['user'] = model_to_dict(x.user.first())
+                response['tag_user'] = model_to_dict(x.tag_user.first())
+                data["commonds"].append(response);
+            return JsonResponse(define.response("success", 0, None, data))
+        else:
+            return JsonResponse(define.response("success", 0, checkrequest))
+    else:
+        return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
+    return JsonResponse(data);
+
 def test(request):
     return JsonResponse({'success':'成功'})

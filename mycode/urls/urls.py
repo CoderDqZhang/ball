@@ -12,6 +12,7 @@ urlpatterns = [
     url('^getUserInfo/',account_view.get_user_info),
     url('^Commond/',account_view.conmmend_user),
     url('^UserCommond/',account_view.get_user_conmmend),
+    url('^UserOtherCommond/',account_view.get_user_other_conmmend),
 #ball
     url('^ballList/',game.ball_list),
 #game

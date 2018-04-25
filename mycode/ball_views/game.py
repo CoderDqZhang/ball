@@ -256,7 +256,10 @@ def my_game_appointment(request):
                     if timezone.now() < x.game_end_time:
                         response['game_status'] = '进行中'
                     else:
-                        response['game_status'] = '结束'
+                        if x.game_user_list.count() == x.game_number:
+                            response['game_status'] = '成功'
+                        else:
+                            response['game_status'] = '失败'
                     user = x.game_create_user.first()
                     response['user'] = model_to_dict(x.game_create_user.first())
                     response['ball'] = model_to_dict(x.game_detail.first(), exclude='image')

@@ -78,5 +78,6 @@ class Game(models.Model):
 class Commond(models.Model):
     user = models.ManyToManyField(Account, related_name='Commond.user+', blank=True,null=True)
     content = models.CharField(max_length=255)
-    rank = models.IntegerField(default=10)
+    userrank = models.IntegerField(default=10)
+    skillrank = models.IntegerField(default=10)
     tag_user = models.ManyToManyField(Account, related_name='Tag.user+', blank=True,null=True)

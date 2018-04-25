@@ -174,7 +174,8 @@ def conmmend_user(request):
             data = {}
             commond = Commond.objects.create(
                 content=body['content'],
-                rank = body['rank'],
+                userrank = body['userrank'],
+                skillrank=body['skillrank'],
             )
             user = Account.objects.all().get(openid=body['openid'])
             targuser = Account.objects.all().get(openid=body['targid'])
@@ -182,7 +183,8 @@ def conmmend_user(request):
             commond.tag_user.add(targuser)
             commond.save()
             data['content'] = body['content']
-            data['rank'] = body['rank']
+            data['userrank'] = body['userrank']
+            data['skillrank'] = body['skillrank']
             data['user'] = model_to_dict(targuser)
             data['targuser'] = model_to_dict(user)
             return JsonResponse(define.response("success", 0, None, data))

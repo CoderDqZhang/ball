@@ -243,7 +243,8 @@ def my_game_appointment(request):
         body, checkrequest = define.request_verif(request, define.GET_MY_GAME_APPLEMENT)
         if checkrequest is None:
             openid = body['openid']
-            detail = Game.objects.all().filter(game_create_user__exact=openid).order_by('-game_end_time')
+            # detail = Game.objects.all().filter(game_create_user__exact=openid).order_by('-game_end_time')
+            detail = Game.objects.all().filter(game_user_list__user__exact=openid).order_by('-game_end_time')
             data = {}
             if detail is None:
                 return JsonResponse(define.response("success", 0, "球约不存在"))

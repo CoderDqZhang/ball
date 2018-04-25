@@ -14,7 +14,8 @@ GENDER = (
 
 UPDATA_USER_INFO = ['openid','nickname','age','gender',
                     'weight','height','game_age','phone',
-                    'province','city','avatar','good_point']
+                    'province','city','avatar','good_point',
+                    'sign']
 
 GET_USER_INFO = ['openid']
 

@@ -124,6 +124,7 @@ def update_user_info(request):
             if checkrequest is None:
                 user.nickname = body['nickname']
                 user.age = body['age']
+                user.sign = body['sign']
                 user.gender = body['gender']
                 user.weight = body['weight']
                 user.height = body['height']
@@ -149,7 +150,6 @@ def update_user_info(request):
 def get_user_info(request):
     if request.method == 'POST':
         openid = json.loads(request.body.decode('utf-8'))['openid']
-        print(openid)
         try:
             user = Account.objects.get(openid=openid)
             body, checkrequest = define.request_verif(request,define.GET_USER_INFO)

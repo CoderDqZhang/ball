@@ -183,10 +183,10 @@ def game_appointment(request):
                 data["game_detail"]['ball']['image'] = detail.game_detail.first().image.name
                 user_list = detail.game_user_list.all()
                 data["game_detail"]['user_list'] = []
-                data["game_detail"]['user_list'].append(model_to_dict(list,exclude='user'))
                 reponse = {}
+                print(user_list)
                 for x in user_list:
-                    data["game_detail"]['user_list'].append(model_to_dict(x,exclude='user'))
+                    reponse['number_count'] = model_to_dict(x, exclude='user')
                     reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all().first().openid))
                     data["game_detail"]['user_list'].append(reponse)
                     if reponse['user']['openid'] == openid:

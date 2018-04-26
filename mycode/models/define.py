@@ -5,7 +5,7 @@ import time
 import json
 import urllib.request
 
-MEDIAURL = 'http://127.0.0.1:8000/media/'
+MEDIAURL = 'http://yq.topveda.cn:8800/media/'
 
 GENDER = (
         (1, '男'),

@@ -7,6 +7,9 @@ import urllib.request
 
 MEDIAURL = 'http://yq.topveda.cn:8800/media/'
 
+WEICHAT_APPID='wxc218fa7c51381f48'
+WEICHAT_SECRET= 'a4d7d52fcc1fb3293c25245bdff07baf'
+
 GENDER = (
         (1, '男'),
         (2, '女'),
@@ -23,6 +26,8 @@ GET_USER_INFO = ['openid']
 GET_USER_COMMOND = ['openid']
 
 COMMOND_USER_INFO = ['openid','targid','content','userrank','skillrank']
+
+WE_CHAT_LOGIN = ['code']
 
 GET_GAME_LIST = ['ball_id']
 
@@ -111,3 +116,12 @@ def getaddress(address):
     JSON_DATA = json.loads(data4[1])
     print(JSON_DATA['result']['location'])
     return JSON_DATA['result']['location']
+
+
+def getopenid(code):
+    url = 'https://api.weixin.qq.com/sns/jscode2session?' \
+          'appid='+WEICHAT_APPID+'&secret='+WEICHAT_SECRET+'&js_code='+code+'&grant_type=authorization_code'
+    data = urllib.request.urlopen(url)
+    data1 = data.read()
+    JSON_DATA = json.loads(str(data1).replace("'","").replace('b',""))
+    return JSON_DATA['openid']

@@ -74,8 +74,8 @@ importlib.reload(sys)
 #
 #     data = {'error': '仅接受POST请求'}
 #     return JsonResponse(data)
-
-logger = logging.getLogger(__name__)  # 刚才在setting.py中配置的logger
+#
+# logger = logging.getLogger(__name__)  # 刚才在setting.py中配置的logger
 
 
 def verify_user(request):
@@ -83,34 +83,37 @@ def verify_user(request):
         # print(request.POST)
         # 初始化返回的字典
         data = {}
-
         # 获取小程序数据
-        code = json.loads(request.body.decode('utf-8'))['code']
-        user = authenticate(username=code, password=code)
-        # 登陆用户并保存 cookie
-        if user:
-            login(request, user)
-            query_user = Account.objects.get(openid=code)
-            query_user.save()
-            data['status'] = '已登录'
-        # 新建用户
-        else:
-            user_ins = User.objects.create(
-                username=code,
-                password=code
-            )
-            user_ins.save()
-            user_ins.is_active = True
-            account = Account.objects.create(
-                user=user_ins,
-                openid=code
-            )
-            new_user = authenticate(username=code, password=code)
-            login(request, new_user)
-            data['status'] = '已创建并登录'
-        res = {'error': '错误'}
-        data['info'] = res
-        return JsonResponse(data)
+        body, checkrequest = define.request_verif(request, define.WE_CHAT_LOGIN)
+        if checkrequest is None:
+            code = body['code']
+            openid = define.getopenid(code)
+            try:
+                user = Account.objects.get(openid=openid)
+                data['user'] = model_to_dict(user)
+                print(data)
+                return JsonResponse(define.response("success", 0, None, data))
+            except Account.DoesNotExist:
+                user_ins = User.objects.create_user(
+                    username=openid,
+                    password=openid
+                )
+                user_ins.save()
+                user_ins.is_active = True
+                account = Account.objects.create(
+                    user=user_ins,
+                    openid=openid,
+                    nickname = body['nickname'],
+                    province = body['province'],
+                    city = body['city'],
+                    gender = body['gender'],
+                    avatar = body['avatar']
+                )
+                data['user'] = model_to_dict(Account.objects.get(openid=openid))
+                print(data)
+                return JsonResponse(define.response("success", 0, None, data))
+            else:
+                return JsonResponse(define.response("success", 0, checkrequest))
     else:
         return JsonResponse(define.response("success",0,"请使用POST方式请求"))
     return JsonResponse(data)

@@ -7,22 +7,22 @@ from ball import settings
 urlpatterns = [
 #User
     url('^test/', account_view.test),
-    url('^WeChatlogin/',account_view.verify_user),
-    url('^updateUserInfo/',account_view.update_user_info),
-    url('^getUserInfo/',account_view.get_user_info),
-    url('^Commond/',account_view.conmmend_user),
-    url('^UserCommond/',account_view.get_user_conmmend),
-    url('^UserOtherCommond/',account_view.get_user_other_conmmend),
+    url('^wechatlogin/',account_view.verify_user),
+    url('^updateuserinfo/',account_view.update_user_info),
+    url('^getuserinfo/',account_view.get_user_info),
+    url('^commond/',account_view.conmmend_user),
+    url('^usercommond/',account_view.get_user_conmmend),
+    url('^userothercommond/',account_view.get_user_other_conmmend),
 #ball
-    url('^ballList/',game.ball_list),
+    url('^balllist/',game.ball_list),
 #game
-    url('^gameList/',game.game_list),
-    url('^gameCreate/',game.game_create),
-    url('^gameDetail/',game.game_detail),
-    url('^gameAppointment/',game.game_appointment),
-    url('^myGameAppoinment/',game.my_game_appointment),
-    url('^gameCancelAppoinment/',game.cancel_game_appointment),
-    url('^gameSearch/',game.search),
+    url('^gamelist/',game.game_list),
+    url('^gamecreate/',game.game_create),
+    url('^gamedetail/',game.game_detail),
+    url('^gameappointment/',game.game_appointment),
+    url('^mygameappoinment/',game.my_game_appointment),
+    url('^gamecancelappoinment/',game.cancel_game_appointment),
+    url('^gamesearch/',game.search),
 
 
 ]

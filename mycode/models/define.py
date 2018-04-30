@@ -5,7 +5,8 @@ import time
 import json
 import urllib.request
 
-MEDIAURL = 'http://yq.topveda.cn:8800/media/'
+# MEDIAURL = 'https://yq.topveda.cn/media/'
+MEDIAURL = 'http://127.0.0.1:8000/media/'
 
 WEICHAT_APPID='wxc218fa7c51381f48'
 WEICHAT_SECRET= 'a4d7d52fcc1fb3293c25245bdff07baf'
@@ -14,6 +15,13 @@ GENDER = (
         (1, '男'),
         (2, '女'),
         (0, '未知')
+    )
+
+GAME_STATUS = (
+        (0, '过期'), #时间结束
+        (1, '进行中'),
+        (2, '失效'), #人数未满
+        (3, '失败'), #人数未满
     )
 
 UPDATA_USER_INFO = ['openid','nickname','age','gender',

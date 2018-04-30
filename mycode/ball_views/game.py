@@ -24,7 +24,6 @@ def ball_list(request):
         data = define.response("success",0)
         data["data"] = []
         for x in balls:
-            print(x)
             x['image'] = define.MEDIAURL + x['image']
             data["data"].append(x)
     return JsonResponse(data)
@@ -36,12 +35,16 @@ def game_list(request):
             ball_id = body['ball_id']
             games = Game.objects.filter(game_detail__exact=ball_id)
             data = {}
+
             data["game_list"] = []
             for x in games:
                 response = model_to_dict(x, exclude=['game_create_user','game_detail','game_user_list',
                                                      ])
                 user = x.game_create_user.first()
-                print(response)
+                if timezone.now() > x.game_end_time:
+                    response['game_status'] = 0 # time done
+                else:
+                    response['game_status'] = 1 # doing
                 response['user'] = model_to_dict(x.game_create_user.first())
 
                 data["game_list"].append(response);
@@ -67,6 +70,7 @@ def game_detail(request):
                 data["game_detail"] = model_to_dict(detail, exclude=['game_create_user','game_detail','game_user_list',
                                                   ])
                 user = detail.game_create_user.first()
+
                 data["game_detail"]['user'] = model_to_dict(detail.game_create_user.first())
                 image = define.MEDIAURL + detail.game_detail.get().image.name
                 data["game_detail"]['ball'] = model_to_dict(detail.game_detail.get(), exclude='image')
@@ -74,8 +78,12 @@ def game_detail(request):
                 user_list = detail.game_user_list.all()
                 data["game_detail"]['user_list'] = []
                 data["game_detail"]['appoint_ment'] = False
-                print(detail.game_user_list)
+                if timezone.now() > detail.game_end_time:
+                    data["game_detail"]['game_status'] = 0 # time done
+                else:
+                    data["game_detail"]['game_status'] = 1 # doing
                 reponse = {}
+                print(reponse)
                 for x in user_list:
                     reponse['number_count'] = model_to_dict(x,exclude='user')
                     reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all().first().openid))
@@ -180,7 +188,6 @@ def game_appointment(request):
                                                     exclude=['game_create_user', 'game_detail', 'game_user_list',
                                                              ])
                 user = detail.game_create_user.first()
-
                 data["game_detail"]['user'] = model_to_dict(detail.game_create_user.first())
                 data["game_detail"]['ball'] = model_to_dict(detail.game_detail.first(), exclude='image')
                 data["game_detail"]['ball']['image'] = detail.game_detail.first().image.name

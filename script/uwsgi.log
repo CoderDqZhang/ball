@@ -1949,3 +1949,17 @@ game_id
 openid
 {}
 [pid: 24235|app: 0|req: 69/342] 192.168.198.1 () {44 vars in 911 bytes} [Thu May  3 15:12:57 2018] POST /ball/gamedetail/ => generated 1238 bytes in 32 msecs (HTTP/1.1 200) 3 headers in 102 bytes (1 switches on core 0)
+openid
+nickname
+age
+gender
+weight
+height
+game_age
+phone
+province
+city
+avatar
+good_point
+sign
+[pid: 24236|app: 0|req: 69/343] 192.168.198.1 () {44 vars in 921 bytes} [Thu May  3 15:15:26 2018] POST /ball/updateuserinfo/ => generated 514 bytes in 21 msecs (HTTP/1.1 200) 3 headers in 101 bytes (1 switches on core 0)

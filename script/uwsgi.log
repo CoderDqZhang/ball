@@ -1963,3 +1963,20 @@ avatar
 good_point
 sign
 [pid: 24236|app: 0|req: 69/343] 192.168.198.1 () {44 vars in 921 bytes} [Thu May  3 15:15:26 2018] POST /ball/updateuserinfo/ => generated 514 bytes in 21 msecs (HTTP/1.1 200) 3 headers in 101 bytes (1 switches on core 0)
+ball_id
+[pid: 24237|app: 0|req: 68/344] 192.168.198.1 () {44 vars in 907 bytes} [Thu May  3 15:15:38 2018] POST /ball/gamelist/ => generated 2095 bytes in 37 msecs (HTTP/1.1 200) 3 headers in 102 bytes (1 switches on core 0)
+ball_id
+[pid: 24233|app: 0|req: 70/345] 192.168.198.1 () {44 vars in 907 bytes} [Thu May  3 15:15:41 2018] POST /ball/gamelist/ => generated 2886 bytes in 48 msecs (HTTP/1.1 200) 3 headers in 102 bytes (1 switches on core 0)
+game_id
+openid
+{}
+[pid: 24234|app: 0|req: 70/346] 192.168.198.1 () {44 vars in 910 bytes} [Thu May  3 15:15:42 2018] POST /ball/gamedetail/ => generated 1193 bytes in 33 msecs (HTTP/1.1 200) 3 headers in 102 bytes (1 switches on core 0)
+game_id
+openid
+{}
+[pid: 24235|app: 0|req: 70/347] 192.168.198.1 () {44 vars in 911 bytes} [Thu May  3 15:15:49 2018] POST /ball/gamedetail/ => generated 2350 bytes in 55 msecs (HTTP/1.1 200) 3 headers in 102 bytes (1 switches on core 0)
+openid
+<QuerySet [<Commond: Commond object (4)>]>
+openid
+[pid: 24237|app: 0|req: 69/348] 192.168.198.1 () {44 vars in 913 bytes} [Thu May  3 15:15:52 2018] POST /ball/getuserinfo/ => generated 513 bytes in 11 msecs (HTTP/1.1 200) 3 headers in 101 bytes (1 switches on core 0)
+[pid: 24236|app: 0|req: 70/349] 192.168.198.1 () {44 vars in 913 bytes} [Thu May  3 15:15:52 2018] POST /ball/usercommond/ => generated 1101 bytes in 24 msecs (HTTP/1.1 200) 3 headers in 102 bytes (1 switches on core 0)

@@ -84,9 +84,13 @@ def game_detail(request):
                     data["game_detail"]['game_status'] = 1 # doing
                 reponse = {}
                 print(reponse)
+                index = 0
                 for x in user_list:
+                    print(x.user.all().count())
+                    print(x.user.all()[0].openid)
                     reponse['number_count'] = model_to_dict(x,exclude='user')
-                    reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all().first().openid))
+                    reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all()[index].openid))
+                    index = index + 1
                     data["game_detail"]['user_list'].append(reponse)
                     if reponse['user']['openid'] == openid:
                         data["game_detail"]['appoint_ment'] = True
@@ -172,9 +176,10 @@ def game_appointment(request):
             if detail is None:
                 return JsonResponse(define.response("success", 0, "球约不存在"))
             else:
+                index = -1
                 for x in detail.game_user_list.all():
-                    print(x.user.all().first().openid)
-                    if x.user.all().first().openid == openid:
+                    index = index + 1
+                    if x.user.all()[index].openid == openid:
                         data['message'] = "已经赴约了"
                         return JsonResponse(define.response("success", 0, None, data))
                 add_user = Account.objects.get(openid=openid)
@@ -194,10 +199,11 @@ def game_appointment(request):
                 user_list = detail.game_user_list.all()
                 data["game_detail"]['user_list'] = []
                 reponse = {}
-                print(user_list)
+                index = 0
                 for x in user_list:
                     reponse['number_count'] = model_to_dict(x, exclude='user')
-                    reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all().first().openid))
+                    reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all()[index].openid))
+                    index = index + 1
                     data["game_detail"]['user_list'].append(reponse)
                     if reponse['user']['openid'] == openid:
                         data["game_detail"]['appoint_ment'] = True
@@ -235,9 +241,11 @@ def cancel_game_appointment(request):
                 data["game_detail"]['user_list'] = []
                 data["game_detail"]['appoint_ment'] = False
                 reponse = {}
+                index = 0
                 for x in user_list:
                     reponse['number_count'] = model_to_dict(x, exclude='user')
-                    reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all().first().openid))
+                    reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all()[index].openid))
+                    index = index + 1
                     data["game_detail"]['user_list'].append(reponse)
                     if reponse['user']['openid'] == openid:
                         data["game_detail"]['appoint_ment'] = True

@@ -82,15 +82,10 @@ def game_detail(request):
                     data["game_detail"]['game_status'] = 0 # time done
                 else:
                     data["game_detail"]['game_status'] = 1 # doing
-                reponse = {}
-                print(reponse)
-                index = 0
                 for x in user_list:
-                    print(x.user.all().count())
-                    print(x.user.all()[0].openid)
+                    reponse = {}
                     reponse['number_count'] = model_to_dict(x,exclude='user')
-                    reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all()[index].openid))
-                    index = index + 1
+                    reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all().first().openid))
                     data["game_detail"]['user_list'].append(reponse)
                     if reponse['user']['openid'] == openid:
                         data["game_detail"]['appoint_ment'] = True
@@ -106,7 +101,6 @@ def game_create(request):
     if request.method == 'POST':
         try:
             body, checkrequest = define.request_verif(request, define.CREATE_GAME)
-            print(body)
             openid = body['openid']
             ball_id = body['ball_id']
 
@@ -139,15 +133,14 @@ def game_create(request):
                 response = model_to_dict(game, exclude=['game_create_user',
                                                                    'game_detail','game_user_list'])
 
-                # apointment = Apointment(
-                #     number = 1,
-                #     user = user
-                # )
-
+                apointment = Apointment.objects.create(
+                    number = 1,
+                    user = user
+                )
 
                 game.game_create_user.add(user)
                 game.game_detail.add(ball)
-                # game.game_user_list.add(apointment)
+                game.game_user_list.add(apointment)
 
                 response['user'] = model_to_dict(user)
                 response['ball'] = model_to_dict(ball,exclude='image')
@@ -176,10 +169,8 @@ def game_appointment(request):
             if detail is None:
                 return JsonResponse(define.response("success", 0, "球约不存在"))
             else:
-                index = -1
                 for x in detail.game_user_list.all():
-                    index = index + 1
-                    if x.user.all()[index].openid == openid:
+                    if x.user.all().first().openid == openid:
                         data['message'] = "已经赴约了"
                         return JsonResponse(define.response("success", 0, None, data))
                 add_user = Account.objects.get(openid=openid)
@@ -198,12 +189,11 @@ def game_appointment(request):
                 data["game_detail"]['ball']['image'] = detail.game_detail.first().image.name
                 user_list = detail.game_user_list.all()
                 data["game_detail"]['user_list'] = []
-                reponse = {}
-                index = 0
+
                 for x in user_list:
+                    reponse = {}
                     reponse['number_count'] = model_to_dict(x, exclude='user')
-                    reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all()[index].openid))
-                    index = index + 1
+                    reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all().first().openid))
                     data["game_detail"]['user_list'].append(reponse)
                     if reponse['user']['openid'] == openid:
                         data["game_detail"]['appoint_ment'] = True
@@ -223,7 +213,6 @@ def cancel_game_appointment(request):
             openid = body['openid']
             detail = Game.objects.get(id=game_id)
             data = {}
-            print(detail)
             if detail is None:
                 return JsonResponse(define.response("success", 0, "球约不存在"))
             else:
@@ -240,12 +229,10 @@ def cancel_game_appointment(request):
                 user_list = detail.game_user_list.all()
                 data["game_detail"]['user_list'] = []
                 data["game_detail"]['appoint_ment'] = False
-                reponse = {}
-                index = 0
                 for x in user_list:
+                    reponse = {}
                     reponse['number_count'] = model_to_dict(x, exclude='user')
-                    reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all()[index].openid))
-                    index = index + 1
+                    reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all().first().openid))
                     data["game_detail"]['user_list'].append(reponse)
                     if reponse['user']['openid'] == openid:
                         data["game_detail"]['appoint_ment'] = True
@@ -261,7 +248,6 @@ def my_game_appointment(request):
         body, checkrequest = define.request_verif(request, define.GET_MY_GAME_APPLEMENT)
         if checkrequest is None:
             openid = body['openid']
-            # detail = Game.objects.all().filter(game_create_user__exact=openid).order_by('-game_end_time')
             detail = Game.objects.all().filter(game_user_list__user__exact=openid).order_by('-game_end_time')
             data = {}
             if detail is None:

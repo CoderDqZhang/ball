@@ -25,7 +25,10 @@ def ball_list(request):
         data["data"] = []
         for x in balls:
             x['image'] = define.MEDIAURL + x['image']
+            list = Game.objects.filter(game_detail__exact=x['id'],game_end_time__gte=timezone.now())
+            x['count'] = list.count()
             data["data"].append(x)
+            print(x)
     return JsonResponse(data)
 
 def game_list(request):

@@ -42,7 +42,7 @@ GET_USER_INFO = ['openid']
 
 GET_USER_COMMOND = ['openid']
 
-COMMOND_USER_INFO = ['openid','targid','content','userrank','skillrank']
+COMMOND_USER_INFO = ['openid','targid','content','userrank','skillrank','anonymity']
 
 WE_CHAT_LOGIN = ['code']
 

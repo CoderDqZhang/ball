@@ -179,6 +179,7 @@ def conmmend_user(request):
                 content=body['content'],
                 userrank = body['userrank'],
                 skillrank=body['skillrank'],
+                anonymity = body['anonymity'],
             )
             user = Account.objects.all().get(openid=body['openid'])
             targuser = Account.objects.all().get(openid=body['targid'])
@@ -186,6 +187,7 @@ def conmmend_user(request):
             commond.tag_user.add(targuser)
             commond.save()
             data['content'] = body['content']
+            data['anonymity'] = body['anonymity']
             data['userrank'] = body['userrank']
             data['skillrank'] = body['skillrank']
             data['user'] = model_to_dict(targuser)

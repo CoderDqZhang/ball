@@ -138,8 +138,8 @@ def game_create(request):
 
                 apointment = Apointment.objects.create(
                     number = 1,
-                    user = user
                 )
+                apointment.user.add(user)
 
                 game.game_create_user.add(user)
                 game.game_detail.add(ball)

@@ -65,6 +65,7 @@ CREATE_GAME = ['game_title','game_subtitle','openid','ball_id','game_location','
 #时间戳转换
 def timeStamp_to_date(timeStamp):
     dateArray = datetime.datetime.utcfromtimestamp(float(timeStamp))
+    dateArray = dateArray + datetime.timedelta(hours=8)
     otherStyleTime = dateArray.strftime("%Y-%m-%d %H:%M:%S")
     return otherStyleTime
 

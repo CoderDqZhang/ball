@@ -11,6 +11,8 @@ import datetime
 import sys
 import importlib
 importlib.reload(sys)
+from django.db.models import Q
+
 
 logger = logging.getLogger(__name__)  # 刚才在setting.py中配置的logger
 
@@ -117,13 +119,13 @@ def game_create(request):
                     game_referee = False
                 else:
                     game_referee = True
-                address = define.getaddress(body['game_location'])
+                # address = define.getaddress(body['game_location'])
                 game = Game.objects.create(
                     game_title = body['game_title'],
                     game_subtitle = body['game_subtitle'],
                     game_location=body['game_location'],
-                    game_latitude = address['lat'],
-                    game_longitude = address['lng'],
+                    game_latitude = body['lat'],
+                    game_longitude = body['lng'],
                     game_location_detail=body['game_location_detail'],
                     game_price=body['game_price'],
                     game_start_time= define.timeStamp_to_date(body['game_start_time']),
@@ -286,7 +288,9 @@ def search(request):
         if checkrequest is None:
             keyword = body['keyword']
             ball_id = body['ball_id']
-            games = Game.objects.filter(game_title__icontains=keyword,game_detail__exact=ball_id)
+            games = Game.objects.filter(Q(game_title__icontains=keyword)|Q(game_create_user__nickname__icontains=keyword)\
+                                        |Q(game_location_detail__icontains=keyword)|Q(game_subtitle__contains=keyword)
+                                        ,game_detail__exact=ball_id)
             data = {}
             data["game_list"] = []
             for x in games:

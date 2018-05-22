@@ -60,7 +60,7 @@ GET_GAME_LIST_KEYWORD = ['keyword','ball_id']
 
 CREATE_GAME = ['game_title','game_subtitle','openid','ball_id','game_location','game_location_detail',
                'game_price','game_start_time','game_end_time','game_referee',
-               'game_number','game_place_condition','number']
+               'game_number','game_place_condition','number','lat','lng']
 
 #时间戳转换
 def timeStamp_to_date(timeStamp):

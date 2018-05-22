@@ -36,7 +36,7 @@ def game_list(request):
         body,checkrequest = define.request_verif(request, define.GET_GAME_LIST)
         if checkrequest is None:
             ball_id = body['ball_id']
-            games = Game.objects.filter(game_detail__exact=ball_id)
+            games = Game.objects.filter(game_detail__exact=ball_id).order_by('-game_createTime')
             data = {}
 
             data["game_list"] = []

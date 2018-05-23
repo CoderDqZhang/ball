@@ -321,7 +321,7 @@ def delete_my_game_appointment(request):
                 else:
                     user_list = detail.game_user_list.all()
                     print(detail.game_user_list)
-                    if detail.game_create_user.first().openid == openid:
+                    if openid==detail.game_create_user.all().first().openid:
                         if user_list.count() > 1:
                             return JsonResponse(define.response("success", 0, "无法删除"))
                         else:

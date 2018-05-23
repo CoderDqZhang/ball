@@ -77,7 +77,6 @@ importlib.reload(sys)
 #
 # logger = logging.getLogger(__name__)  # 刚才在setting.py中配置的logger
 
-
 def verify_user(request):
     if request.method == 'POST':
         # print(request.POST)

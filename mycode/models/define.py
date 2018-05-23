@@ -5,6 +5,7 @@ import time
 import json
 import urllib.request
 import uuid
+from mycode.models import errors
 
 def get_mac_address():
     mac=uuid.UUID(int = uuid.getnode()).hex[-12:]
@@ -85,6 +86,9 @@ def response(status,code,msg = None,request_data = None):
         data['data'] = request_data
     return data
 
+def check_request_data(request_body,request_list):
+    return
+
 #请求验证是否成功
 def request_verif(request_body,request_list):
     data = {}
@@ -93,20 +97,25 @@ def request_verif(request_body,request_list):
     jsonData = json.loads(request_body.body.decode('utf-8'))
     if request_body.method == 'POST':
         for p in request_list:
-            print(p)
             if p not in jsonData:
                 data['errors'].append({"参数错误":p+"未传值"})
+                print(p)
                 error = True
+            else:
+                if (jsonData[p] == None):
+                    data['errors'].append({'error':errors.ERRORS[p]})
+                    error = True
+                print(jsonData[p])
     elif request_body.method == 'GET':
         for p in request_list:
             if p not in request_body.GET:
                 data['errors'].append({"参数错误":p+"未传值"})
                 error = True
 
-    if request_body.method == 'POST':
-        return json.loads(request_body.body.decode('utf-8')), None
     if error:
         return None, data
+    if request_body.method == 'POST':
+        return json.loads(request_body.body.decode('utf-8')), None
     return request_body.GET, None
 
 # def as_dict(models):

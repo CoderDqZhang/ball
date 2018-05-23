@@ -106,20 +106,19 @@ def game_create(request):
     if request.method == 'POST':
         try:
             body, checkrequest = define.request_verif(request, define.CREATE_GAME)
-            openid = body['openid']
-            ball_id = body['ball_id']
-
-            user = Account.objects.get(openid=openid)
-            ball = Ball.objects.get(id=ball_id)
 
             if checkrequest is None:
-                data = {}
+                openid = body['openid']
+                ball_id = body['ball_id']
 
+                user = Account.objects.get(openid=openid)
+                ball = Ball.objects.get(id=ball_id)
+                data = {}
                 if request.POST.get('game_referee') == 0:
                     game_referee = False
                 else:
                     game_referee = True
-                # address = define.getaddress(body['game_location'])
+
                 game = Game.objects.create(
                     game_title = body['game_title'],
                     game_subtitle = body['game_subtitle'],

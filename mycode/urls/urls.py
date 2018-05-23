@@ -23,6 +23,6 @@ urlpatterns = [
     url('^mygameappoinment/',game.my_game_appointment),
     url('^gamecancelappoinment/',game.cancel_game_appointment),
     url('^gamesearch/',game.search),
-
+    url('^gamedelete/',game.delete_my_game_appointment),
 
 ]

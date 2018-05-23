@@ -307,3 +307,32 @@ def search(request):
         return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
     return JsonResponse(data);
 
+def delete_my_game_appointment(request):
+    if request.method == 'POST':
+        body, checkrequest = define.request_verif(request, define.DELETE_GET_MY_GAME_APPLEMENT)
+        if checkrequest is None:
+            game_id = body['game_id']
+            openid = body['openid']
+            try:
+                detail = Game.objects.get(id=game_id)
+                data = {}
+                if detail is None:
+                    return JsonResponse(define.response("success", 0, "球约不存在"))
+                else:
+                    user_list = detail.game_user_list.all()
+                    print(detail.game_user_list)
+                    if detail.game_create_user.first().openid == openid:
+                        if user_list.count() > 1:
+                            return JsonResponse(define.response("success", 0, "无法删除"))
+                        else:
+                            ret = Game.objects.get(id=game_id).delete()
+                            return JsonResponse(define.response("success", 0, None, data))
+                    else:
+                        return JsonResponse(define.response("success", 0, "无法删除"))
+            except  Game.DoesNotExist:
+                return JsonResponse(define.response("success", 0, "球约不存在"))
+        else:
+            return JsonResponse(define.response("success", 0, checkrequest))
+    else:
+        return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
+    return JsonResponse(data);

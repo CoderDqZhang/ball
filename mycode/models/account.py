@@ -8,6 +8,7 @@ import datetime
 import sys
 import importlib
 importlib.reload(sys)
+from django.db.models import Q
 
 class Account(models.Model):
 
@@ -27,6 +28,7 @@ class Account(models.Model):
     avatar = models.CharField('头像',max_length=200, default='')
     createTime = models.DateField(auto_created=True,auto_now_add=True)
     good_point = models.CharField('擅长',max_length=200, blank=True)
+
 
     def __str__(self):
         return self.nickname

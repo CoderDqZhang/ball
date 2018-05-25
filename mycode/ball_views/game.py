@@ -12,7 +12,8 @@ import sys
 import importlib
 importlib.reload(sys)
 from django.db.models import Q
-
+from django.db.models.aggregates import Count
+from django.db.models import Sum
 
 logger = logging.getLogger(__name__)  # 刚才在setting.py中配置的logger
 
@@ -92,6 +93,9 @@ def game_detail(request):
                     reponse['number_count'] = model_to_dict(x,exclude='user')
                     reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all().first().openid))
                     data["game_detail"]['user_list'].append(reponse)
+                    reponse['user']['appointment_count'] = Game.objects.all().filter(
+                        Q(game_user_list__user__openid__exact=x.user.all().first().openid)
+                        | Q(game_create_user__openid=x.user.all().first().openid)).count()
                     if reponse['user']['openid'] == openid:
                         data["game_detail"]['appoint_ment'] = True
                 return JsonResponse(define.response("success", 0, None, data))
@@ -147,6 +151,7 @@ def game_create(request):
                 game.game_user_list.add(apointment)
 
                 response['user'] = model_to_dict(user)
+
                 response['ball'] = model_to_dict(ball,exclude='image')
                 response['ball']['image'] = ball.image.name
                 data['game'] = response
@@ -173,10 +178,18 @@ def game_appointment(request):
             if detail is None:
                 return JsonResponse(define.response("success", 0, "球约不存在"))
             else:
-                for x in detail.game_user_list.all():
-                    if x.user.all().first().openid == openid:
-                        data['message'] = "已经赴约了"
+                if detail.game_user_list.all().filter(user__openid__exact=openid):
+                    data['message'] = "已经赴约了"
+                    return JsonResponse(define.response("success", 0, None, data))
+                else:
+                    appoint_number = detail.game_user_list.all().values('number').annotate(appointment_number=Sum('number'))
+                    appoint_numbers = 0
+                    for num in appoint_number:
+                        appoint_numbers = appoint_numbers + int(num['number'])
+                    if appoint_numbers + number > detail.game_number:
+                        data['message'] = "球约人数已满"
                         return JsonResponse(define.response("success", 0, None, data))
+
                 add_user = Account.objects.get(openid=openid)
                 list = Apointment()
                 list = Apointment.objects.create(
@@ -198,6 +211,9 @@ def game_appointment(request):
                     reponse = {}
                     reponse['number_count'] = model_to_dict(x, exclude='user')
                     reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all().first().openid))
+                    reponse['user']['appointment_count'] = Game.objects.all().filter(
+                        Q(game_user_list__user__openid__exact=x.user.all().first().openid)
+                        | Q(game_create_user__openid=x.user.all().first().openid)).count()
                     data["game_detail"]['user_list'].append(reponse)
                     if reponse['user']['openid'] == openid:
                         data["game_detail"]['appoint_ment'] = True
@@ -237,6 +253,9 @@ def cancel_game_appointment(request):
                     reponse = {}
                     reponse['number_count'] = model_to_dict(x, exclude='user')
                     reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all().first().openid))
+                    reponse['user']['appointment_count'] = Game.objects.all().filter(
+                        Q(game_user_list__user__openid__exact=x.user.all().first().openid)
+                        | Q(game_create_user__openid=x.user.all().first().openid)).count()
                     data["game_detail"]['user_list'].append(reponse)
                     if reponse['user']['openid'] == openid:
                         data["game_detail"]['appoint_ment'] = True

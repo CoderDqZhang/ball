@@ -1,8 +1,6 @@
 import base64
 import json
 from Crypto.Cipher import AES
-# from Cryptodome.Cipher import AES
-# from Cryptodome.Cipher
 
 class WXBizDataCrypt:
     def __init__(self, appId, sessionKey):

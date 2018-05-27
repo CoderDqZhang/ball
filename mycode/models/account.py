@@ -77,8 +77,6 @@ class Game(models.Model):
     game_user_list = models.ManyToManyField( Apointment,related_name='game_list_user',  blank=True, null=True) # "赴约人",
 
 
-
-
 class Commond(models.Model):
     user = models.ManyToManyField(Account, related_name='Commond.user+', blank=True,null=True)
     content = models.CharField(max_length=255)
@@ -86,3 +84,16 @@ class Commond(models.Model):
     userrank = models.IntegerField(default=10)
     skillrank = models.IntegerField(default=10)
     tag_user = models.ManyToManyField(Account, related_name='Tag.user+', blank=True,null=True)
+
+
+class GameClub(models.Model):
+    user = models.ManyToManyField(Account,related_name='club_create_user+', blank=True) #"创建用户",
+    club_manager = models.ManyToManyField(Account, related_name='clue_manager_user+', blank=True)  # "管理员",
+    club_user = models.ManyToManyField(Account, related_name='clue_user+', blank=True)  # "用户",
+    club_slogan = models.CharField("口号", max_length=255, default='')  #"场地条件",
+    club_desc = models.CharField("介绍", max_length=255, default='')  # "俱乐部介绍",
+    club_title = models.CharField("介绍", max_length=255, default='')  # "俱乐部介绍",
+    club_post = models.ImageField(upload_to='images/club',default='user1.jpg', blank=True, null=True)
+    club_grade = models.IntegerField(default=1)
+    club_project = models.CharField("项目介绍", max_length=255, default='')
+    club_number = models.IntegerField(default=0) #人数限制，0为不限制人数

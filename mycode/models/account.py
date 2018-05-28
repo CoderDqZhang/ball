@@ -88,6 +88,7 @@ class Commond(models.Model):
 
 class GameClub(models.Model):
     user = models.ManyToManyField(Account,related_name='club_create_user+', blank=True) #"创建用户",
+    club_ball = models.ManyToManyField(Ball, blank=True)  # "球约类型",
     club_manager = models.ManyToManyField(Account, related_name='clue_manager_user+', blank=True)  # "管理员",
     club_user = models.ManyToManyField(Account, related_name='clue_user+', blank=True)  # "用户",
     club_slogan = models.CharField("口号", max_length=255, default='')  #"场地条件",
@@ -97,3 +98,13 @@ class GameClub(models.Model):
     club_grade = models.IntegerField(default=1)
     club_project = models.CharField("项目介绍", max_length=255, default='')
     club_number = models.IntegerField(default=0) #人数限制，0为不限制人数
+
+
+class UnreadMessage(models.Model):
+    user_openid = models.ManyToManyField(Account,related_name='unread_create_user+', blank=True) #"创建用户",
+    tag_user_openid = models.ManyToManyField(Account,related_name='unread_tag_user+', blank=True) #"创建用户",
+    read_flag = models.IntegerField(default=0)
+    message_type = models.IntegerField(default=0)
+    message_type_desc = models.CharField("类型介绍", max_length=255, default='申请入群')
+    unread_club = models.ManyToManyField(GameClub,related_name='club_game+', blank=True) #"创建用户",
+    unread_game = models.ManyToManyField(Game, related_name='game_ball+', blank=True)  # "创建用户",

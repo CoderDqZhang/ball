@@ -56,6 +56,8 @@ WE_CHAT_LOGIN = ['code']
 
 GET_GAME_LIST = ['ball_id']
 
+
+
 GET_GAME_DETAIL = ['game_id','openid']
 
 GET_GAME_APPLEMENT = ['game_id','openid','number_count']
@@ -71,6 +73,21 @@ GET_GAME_LIST_KEYWORD = ['keyword','ball_id']
 CREATE_GAME = ['game_title','game_subtitle','openid','ball_id','game_location','game_location_detail',
                'game_price','game_start_time','game_end_time','game_referee',
                'game_number','game_place_condition','number','lat','lng']
+
+
+GET_CLUB_CREATE = ['openid','club_slogan','club_desc','club_title','club_post','club_grade'
+                   ,'club_project','club_number','ball_id']
+MY_GAME_CLUB_LIST = ['openid']
+
+UNREAD_MESSAGE = ['openid','tag_openid','message_type']
+
+INVETE_MESSAGE = ['club_id','tag_openid','message_type']
+
+UNREAD_MESSAGE_CLUN_MANAGER = ['openid','club_id','message_type']
+
+UNREAD_MESSAGE_USER = ['openid']
+
+CHANGE_CLUB_USER = ['status','unread_id']
 
 #时间戳转换
 def timeStamp_to_date(timeStamp):
@@ -103,7 +120,10 @@ def request_verif(request_body,request_list):
     data = {}
     error = False
     data['errors'] = []
-    jsonData = json.loads(request_body.body.decode('utf-8'))
+    try:
+        jsonData = json.loads(request_body.body.decode('utf-8'))
+    except:
+        return request_body.POST,None
     if request_body.method == 'POST':
         for p in request_list:
             if p not in jsonData:

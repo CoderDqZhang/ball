@@ -71,32 +71,7 @@ def game_detail(request):
             if detail is None:
                 return JsonResponse(define.response("success", 0, "球约不存在"))
             else:
-
-                data["game_detail"] = model_to_dict(detail, exclude=['game_create_user','game_detail','game_user_list',
-                                                  ])
-                user = detail.game_create_user.first()
-
-                data["game_detail"]['user'] = model_to_dict(detail.game_create_user.first())
-                image = define.MEDIAURL + detail.game_detail.get().image.name
-                data["game_detail"]['ball'] = model_to_dict(detail.game_detail.get(), exclude='image')
-                data["game_detail"]['ball']['image'] = image
-                user_list = detail.game_user_list.all()
-                data["game_detail"]['user_list'] = []
-                data["game_detail"]['appoint_ment'] = False
-                if timezone.now() > detail.game_end_time:
-                    data["game_detail"]['game_status'] = 0 # time done
-                else:
-                    data["game_detail"]['game_status'] = 1 # doing
-                for x in user_list:
-                    reponse = {}
-                    reponse['number_count'] = model_to_dict(x,exclude='user')
-                    reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all().first().openid))
-                    data["game_detail"]['user_list'].append(reponse)
-                    reponse['user']['appointment_count'] = Game.objects.all().filter(
-                        Q(game_user_list__user__openid__exact=x.user.all().first().openid)
-                        | Q(game_create_user__openid=x.user.all().first().openid)).count()
-                    if reponse['user']['openid'] == openid:
-                        data["game_detail"]['appoint_ment'] = True
+                data = returngame_detail(detail, openid)
                 return JsonResponse(define.response("success", 0, None, data))
         else:
             return JsonResponse(define.response("success", 0, checkrequest))
@@ -196,27 +171,7 @@ def game_appointment(request):
                 )
                 list.user.add(add_user)
                 detail.game_user_list.add(list)
-                data["game_detail"] = model_to_dict(detail,
-                                                    exclude=['game_create_user', 'game_detail', 'game_user_list',
-                                                             ])
-                user = detail.game_create_user.first()
-                data["game_detail"]['user'] = model_to_dict(detail.game_create_user.first())
-                data["game_detail"]['ball'] = model_to_dict(detail.game_detail.first(), exclude='image')
-                data["game_detail"]['ball']['image'] = detail.game_detail.first().image.name
-                user_list = detail.game_user_list.all()
-                data["game_detail"]['user_list'] = []
-
-                for x in user_list:
-                    reponse = {}
-                    reponse['number_count'] = model_to_dict(x, exclude='user')
-                    reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all().first().openid))
-                    reponse['user']['appointment_count'] = Game.objects.all().filter(
-                        Q(game_user_list__user__openid__exact=x.user.all().first().openid)
-                        | Q(game_create_user__openid=x.user.all().first().openid)).count()
-                    data["game_detail"]['user_list'].append(reponse)
-                    if reponse['user']['openid'] == openid:
-                        data["game_detail"]['appoint_ment'] = True
-
+                data = returngame_detail(detail, openid)
                 return JsonResponse(define.response("success", 0, None, data))
         else:
             return JsonResponse(define.response("success", 0, checkrequest))
@@ -235,29 +190,7 @@ def cancel_game_appointment(request):
             if detail is None:
                 return JsonResponse(define.response("success", 0, "球约不存在"))
             else:
-
-                data["game_detail"] = model_to_dict(detail,
-                                                    exclude=['game_create_user', 'game_detail', 'game_user_list',
-                                                             ])
-                user = detail.game_create_user.first()
-                data["game_detail"]['user'] = model_to_dict(detail.game_create_user.first())
-                image = define.MEDIAURL + detail.game_detail.get().image.name
-                data["game_detail"]['ball'] = model_to_dict(detail.game_detail.get(), exclude='image')
-                data["game_detail"]['ball']['image'] = image
-                detail.game_user_list.all().filter(user__openid__exact=openid).delete()
-                user_list = detail.game_user_list.all()
-                data["game_detail"]['user_list'] = []
-                data["game_detail"]['appoint_ment'] = False
-                for x in user_list:
-                    reponse = {}
-                    reponse['number_count'] = model_to_dict(x, exclude='user')
-                    reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all().first().openid))
-                    reponse['user']['appointment_count'] = Game.objects.all().filter(
-                        Q(game_user_list__user__openid__exact=x.user.all().first().openid)
-                        | Q(game_create_user__openid=x.user.all().first().openid)).count()
-                    data["game_detail"]['user_list'].append(reponse)
-                    if reponse['user']['openid'] == openid:
-                        data["game_detail"]['appoint_ment'] = True
+                data = returngame_detail(detail,openid)
                 return JsonResponse(define.response("success", 0, None, data))
         else:
             return JsonResponse(define.response("success", 0, checkrequest))
@@ -275,22 +208,7 @@ def my_game_appointment(request):
             if detail is None:
                 return JsonResponse(define.response("success", 0, "球约不存在"))
             else:
-                data["game_list"] = []
-                for x in detail:
-                    response = model_to_dict(x, exclude=['game_create_user', 'game_detail', 'game_user_list',
-                                                    ])
-                    if timezone.now() < x.game_end_time:
-                        response['game_status'] = '进行中'
-                    else:
-                        if x.game_user_list.count() == x.game_number:
-                            response['game_status'] = '成功'
-                        else:
-                            response['game_status'] = '失败'
-                    user = x.game_create_user.first()
-                    response['user'] = model_to_dict(x.game_create_user.first())
-                    response['ball'] = model_to_dict(x.game_detail.first(), exclude='image')
-                    response['ball']['image'] = define.MEDIAURL + x.game_detail.first().image.name
-                    data["game_list"].append(response)
+                data = returngame_detail(detail, openid)
                 return JsonResponse(define.response("success", 0, None, data))
         else:
             return JsonResponse(define.response("success", 0, checkrequest))
@@ -311,12 +229,7 @@ def search(request):
             data = {}
             data["game_list"] = []
             for x in games:
-                response = model_to_dict(x, exclude=['game_create_user', 'game_detail', 'game_user_list',
-                                                     ])
-                user = x.game_create_user.first()
-                response['user'] = model_to_dict(x.game_create_user.first())
-                response['ball'] = model_to_dict(x.game_detail.first(), exclude='image')
-                response['ball']['image'] = define.MEDIAURL + x.game_detail.first().image.name
+                response = returngame_detail(x)
                 data["game_list"].append(response)
             return JsonResponse(define.response("success", 0, None, data))
         else:
@@ -354,3 +267,32 @@ def delete_my_game_appointment(request):
     else:
         return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
     return JsonResponse(data);
+
+def returngame_detail(detail,openid = None):
+    data = {}
+    data["game_detail"] = model_to_dict(detail, exclude=['game_create_user', 'game_detail', 'game_user_list',
+                                                         ])
+    user = detail.game_create_user.first()
+
+    data["game_detail"]['user'] = model_to_dict(detail.game_create_user.first())
+    image = define.MEDIAURL + detail.game_detail.get().image.name
+    data["game_detail"]['ball'] = model_to_dict(detail.game_detail.get(), exclude='image')
+    data["game_detail"]['ball']['image'] = image
+    user_list = detail.game_user_list.all()
+    data["game_detail"]['user_list'] = []
+    data["game_detail"]['appoint_ment'] = False
+    if timezone.now() > detail.game_end_time:
+        data["game_detail"]['game_status'] = 0  # time done
+    else:
+        data["game_detail"]['game_status'] = 1  # doing
+    for x in user_list:
+        reponse = {}
+        reponse['number_count'] = model_to_dict(x, exclude='user')
+        reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all().first().openid))
+        data["game_detail"]['user_list'].append(reponse)
+        reponse['user']['appointment_count'] = Game.objects.all().filter(
+            Q(game_user_list__user__openid__exact=x.user.all().first().openid)
+            | Q(game_create_user__openid=x.user.all().first().openid)).count()
+        if reponse['user']['openid'] == openid:
+            data["game_detail"]['appoint_ment'] = True
+    return data

@@ -7,6 +7,7 @@ from mycode.models.account import Account,GameClub,Ball,UnreadMessage,Game,Apoin
 from django.core import serializers
 import json
 from django.utils import timezone
+from mycode.ball_views.game import returngame_detail
 import datetime
 from django.db.models import Q
 import sys
@@ -373,8 +374,7 @@ def unread_message(request):
                     if x.message_type == 0 or x.message_type == 1 or x.message_type == 2:
                         response['unread_club'] = returngame_club(x.unread_club.first())
                     elif x.message_type == 3:
-                        response['unread_game'] = model_to_dict(x.unread_game.first(),exclude=['game_create_user','game_detail',
-                                                                                    'game_user_list'])
+                        response['unread_game'] = returngame_detail(x.unread_game.first(),openid)
                     data['unread_message'].append(response)
                 return JsonResponse(define.response("success", 0, request_data = data))
             else:

@@ -79,6 +79,8 @@ GET_CLUB_CREATE = ['openid','club_slogan','club_desc','club_title','club_post','
                    ,'club_project','club_number','ball_id']
 MY_GAME_CLUB_LIST = ['openid']
 
+MY_GAME_CLUB_DETAIL = ['openid','club_id']
+
 UNREAD_MESSAGE = ['openid','tag_openid','message_type']
 
 INVETE_MESSAGE = ['club_id','tag_openid','message_type']
@@ -86,6 +88,10 @@ INVETE_MESSAGE = ['club_id','tag_openid','message_type']
 UNREAD_MESSAGE_CLUN_MANAGER = ['openid','club_id','message_type']
 
 UNREAD_MESSAGE_USER = ['openid']
+
+LEAVE_GAME_CLUB = ['openid','club_id']
+
+DISSOLVE_GAME_CLUB = ['openid','club_id']
 
 CHANGE_CLUB_USER = ['status','unread_id']
 

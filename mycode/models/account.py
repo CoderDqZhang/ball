@@ -93,7 +93,7 @@ class GameClub(models.Model):
     club_user = models.ManyToManyField(Account, related_name='clue_user+', blank=True)  # "用户",
     club_slogan = models.CharField("口号", max_length=255, default='')  #"场地条件",
     club_desc = models.CharField("介绍", max_length=255, default='')  # "俱乐部介绍",
-    club_title = models.CharField("介绍", max_length=255, default='')  # "俱乐部介绍",
+    club_title = models.CharField("名称", max_length=255, default='')  # "俱乐部介绍",
     club_post = models.ImageField(upload_to='images/club',default='user1.jpg', blank=True, null=True)
     club_grade = models.IntegerField(default=1)
     club_project = models.CharField("项目介绍", max_length=255, default='')

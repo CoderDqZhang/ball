@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from mycode.models import define
 import logging
 from django.forms.models import model_to_dict
-from mycode.models.account import Account,GameClub,Ball,UnreadMessage
+from mycode.models.account import Account,GameClub,Ball,UnreadMessage,Game,Apointment
 from django.core import serializers
 import json
 from django.utils import timezone
@@ -18,6 +18,7 @@ from django.core.files.base import ContentFile
 
 ## message_type == 0 申请入群   message_type == 1 申请成为管理员 message_type == 2 邀请入群
 
+#创建俱乐部
 def create_game_club(request):
     if request.method == 'POST':
         try:
@@ -58,7 +59,7 @@ def create_game_club(request):
         return JsonResponse(define.response("success",0,"请使用POST方式请求"))
     return JsonResponse(data);
 
-
+#俱乐部详情
 def club_game_detail(request):
     if request.method == 'POST':
         try:
@@ -77,7 +78,7 @@ def club_game_detail(request):
     else:
         return JsonResponse(define.response("success",0,"请使用POST方式请求"))
     return JsonResponse(data);
-
+#我的俱乐部
 def my_game_club_list(request):
     if request.method == 'POST':
         try:
@@ -102,7 +103,7 @@ def my_game_club_list(request):
         return JsonResponse(define.response("success",0,"请使用POST方式请求"))
     return JsonResponse(data);
 
-
+#邀请入群
 def invate_club(request):
     if request.method == 'POST':
         try:
@@ -251,6 +252,52 @@ def dissolve_game_club(request):
         return JsonResponse(define.response("success",0,"请使用POST方式请求"))
     return JsonResponse(data);
 
+
+#发起球约
+def send_game_invate(request):
+    if request.method == 'POST':
+        try:
+            body, checkrequest = define.request_verif(request, define.INVETE_GAME_CLUB_USER)
+            if checkrequest is None:
+                openid = body['openid']
+                message_type = body['message_type']
+                club_id = body['club_id']
+                game_id = body['game_id']
+                clubs = GameClub.objects.get(id=club_id)
+                game = Game.objects.get(id=game_id)
+                user = Account.objects.get(openid=openid)
+                for tag_user in clubs.club_manager.all():
+                    unread = UnreadMessage.objects.create(
+                        message_type=body['message_type'],
+                        message_type_desc='球约邀请',
+                        read_flag=0
+                    )
+                    unread.user_openid.add(user)
+                    unread.tag_user_openid.add(tag_user)
+                    unread.unread_club.add(clubs)
+                    unread.unread_game.add(game)
+                for tag_user in clubs.club_user.all():
+                    unread = UnreadMessage.objects.create(
+                        message_type=body['message_type'],
+                        message_type_desc='球约邀请',
+                        read_flag=0
+                    )
+                    unread.user_openid.add(user)
+                    unread.tag_user_openid.add(tag_user)
+                    unread.unread_club.add(clubs)
+                    unread.unread_game.add(game)
+                data = {}
+                response = {}
+                data["message"] = "邀请成功"
+                return JsonResponse(define.response("success", 0, request_data=data))
+            else:
+                return JsonResponse(define.response("success", 0, checkrequest))
+        except  Account.DoesNotExist:
+            return JsonResponse(define.response("success", 0, "用户不存在"))
+    else:
+        return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
+    return JsonResponse(data);
+
 def club_status(request):
     if request.method == 'POST':
         try:
@@ -276,11 +323,21 @@ def club_status(request):
                     elif unread.message_type == 1:
                         club = GameClub.objects.get(id=unread.unread_club.first().id)
                         club.club_manager.add(user)
+                        club.club_user.remove(user)
                         data['message'] = '加入成功'
                     elif unread.message_type == 2:
                         club = GameClub.objects.get(id=unread.unread_club.first().id)
                         club.club_user.add(tag_user)
                         data['message'] = '加入成功'
+                    elif unread.message_type == 3:
+                        game = Game.objects.get(id=unread.unread_game.first().id)
+                        list = Apointment()
+                        list = Apointment.objects.create(
+                            number=1
+                        )
+                        list.user.add(tag_user)
+                        game.game_user_list.add(list)
+                        data['message'] = '赴约成功'
                     return JsonResponse(define.response("success", 0, request_data=data))
                 else:
                     data["message"] = '拒绝入群'
@@ -315,7 +372,7 @@ def unread_message(request):
                     print(x.unread_club)
                     if x.message_type == 0 or x.message_type == 1 or x.message_type == 2:
                         response['unread_club'] = returngame_club(x.unread_club.first())
-                    elif x.message_type == 2:
+                    elif x.message_type == 3:
                         response['unread_game'] = model_to_dict(x.unread_game.first(),exclude=['game_create_user','game_detail',
                                                                                     'game_user_list'])
                     data['unread_message'].append(response)

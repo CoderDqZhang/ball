@@ -95,6 +95,8 @@ DISSOLVE_GAME_CLUB = ['openid','club_id']
 
 CHANGE_CLUB_USER = ['status','unread_id']
 
+INVETE_GAME_CLUB_USER = ['openid','club_id','game_id','message_type']
+
 #时间戳转换
 def timeStamp_to_date(timeStamp):
     dateArray = datetime.datetime.utcfromtimestamp(float(timeStamp))

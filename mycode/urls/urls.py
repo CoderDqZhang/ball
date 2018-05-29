@@ -29,11 +29,11 @@ urlpatterns = [
     url('^mygameclub',game_club.my_game_club_list),
     url('^applyclub',game_club.apply_club),
     url('^gameclubstatus',game_club.club_status),
+    url('^gamesendgameinvate',game_club.send_game_invate),
     url('^gameclumanager',game_club.apply_club_manager),
     url('^invateclub',game_club.invate_club),
     url('^leavegameclub',game_club.leave_game_club),
     url('^dissolvegameclub',game_club.dissolve_game_club),
     url('^clubgamedetail',game_club.club_game_detail),
     url('^unreadmessage',game_club.unread_message)
-
 ]

@@ -52,7 +52,6 @@ def game_list(request):
                 else:
                     response['game_status'] = 1 # doing
                 response['user'] = model_to_dict(x.game_create_user.first())
-
                 data["game_list"].append(response);
             return JsonResponse(define.response("success", 0, None, data))
         else:

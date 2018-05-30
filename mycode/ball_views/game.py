@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from mycode.models import define
 import logging
 from django.forms.models import model_to_dict
-from mycode.models.account import Ball,Game,Account,Apointment
+from mycode.models.account import Ball,Game,Account,Apointment,GameClub
 from django.core import serializers
 import json
 from django.utils import timezone
@@ -39,12 +39,23 @@ def game_list(request):
         body,checkrequest = define.request_verif(request, define.GET_GAME_LIST)
         if checkrequest is None:
             ball_id = body['ball_id']
-            games = Game.objects.filter(game_detail__exact=ball_id).order_by('-game_createTime')
+            #1.0.1版本中增加俱乐部权限
+            try:
+                print(body['open_id'])
+                games = Game.objects.filter(game_detail__exact=ball_id).order_by('-game_createTime') \
+                    .filter((Q(game_club_create=0)) |
+                            (Q(game_club_create=1) & Q(game_club_out=0)) |
+                            (Q(game_club_create=1) & Q(game_club_out=1) &
+                            (Q(game_club__user__openid__exact=body['open_id']) |
+                            Q(game_club__club_manager__openid__exact=body['open_id']) |
+                            Q(game_club__club_user__openid__exact=body['open_id']))))
+            except:
+                games = Game.objects.filter(game_detail__exact=ball_id).order_by('-game_createTime')
             data = {}
 
             data["game_list"] = []
             for x in games:
-                response = model_to_dict(x, exclude=['game_create_user','game_detail','game_user_list',
+                response = model_to_dict(x, exclude=['game_create_user','game_club','game_detail','game_user_list',
                                                      ])
                 user = x.game_create_user.first()
                 if timezone.now() > x.game_end_time:
@@ -112,7 +123,12 @@ def game_create(request):
                     game_place_condition=body['game_place_condition'],
 
                 )
-                response = model_to_dict(game, exclude=['game_create_user',
+                if body['club_create'] != None:
+                    game.game_club_create = body['club_create']
+                    game.game_club_out = body['club_out']
+                    game.game_club.add(GameClub.objects.get(id=body['club_id']))
+                    game.save()
+                response = model_to_dict(game, exclude=['game_create_user','game_club',
                                                                    'game_detail','game_user_list'])
 
                 apointment = Apointment.objects.create(
@@ -123,9 +139,7 @@ def game_create(request):
                 game.game_create_user.add(user)
                 game.game_detail.add(ball)
                 game.game_user_list.add(apointment)
-
                 response['user'] = model_to_dict(user)
-
                 response['ball'] = model_to_dict(ball,exclude='image')
                 response['ball']['image'] = ball.image.name
                 data['game'] = response
@@ -223,7 +237,19 @@ def search(request):
         if checkrequest is None:
             keyword = body['keyword']
             ball_id = body['ball_id']
-            games = Game.objects.filter(Q(game_title__icontains=keyword)|Q(game_create_user__nickname__icontains=keyword)\
+            try:
+                print(body['open_id'])
+                games = Game.objects.filter(
+                    Q(game_title__icontains=keyword) | Q(game_create_user__nickname__icontains=keyword) \
+                    | Q(game_location_detail__icontains=keyword) | Q(game_subtitle__contains=keyword)
+                    , game_detail__exact=ball_id).filter((Q(game_club_create=0)) |
+                        (Q(game_club_create=1) & Q(game_club_out=0)) |
+                        (Q(game_club_create=1) & Q(game_club_out=1) &
+                         (Q(game_club__user__openid__exact=body['open_id']) |
+                          Q(game_club__club_manager__openid__exact=body['open_id']) |
+                          Q(game_club__club_user__openid__exact=body['open_id']))))
+            except:
+                games = Game.objects.filter(Q(game_title__icontains=keyword)|Q(game_create_user__nickname__icontains=keyword)\
                                         |Q(game_location_detail__icontains=keyword)|Q(game_subtitle__contains=keyword)
                                         ,game_detail__exact=ball_id)
             data = {}
@@ -270,7 +296,7 @@ def delete_my_game_appointment(request):
 
 def returngame_detail(detail,openid = None):
     data = {}
-    data["game_detail"] = model_to_dict(detail, exclude=['game_create_user', 'game_detail', 'game_user_list',
+    data["game_detail"] = model_to_dict(detail, exclude=['game_create_user','game_club', 'game_detail', 'game_user_list',
                                                          ])
     user = detail.game_create_user.first()
 

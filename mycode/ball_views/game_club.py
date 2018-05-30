@@ -46,9 +46,8 @@ def create_game_club(request):
                     club_post = images
                 )
                 game_club.club_ball.add(ball)
-                print(request.FILES.get('club_post').name)
                 response = model_to_dict(game_club, exclude=['user',
-                                                                   'club_manager','club_user','club_post'])
+                                                                   'club_manager','club_user','club_post','club_ball'])
                 game_club.user.add(user)
                 game_club.club_manager.add(user)
                 response['club_post'] =  define.MEDIAURL + request.FILES.get('club_post').name

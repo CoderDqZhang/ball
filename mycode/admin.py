@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from mycode.models.account import Account, Game, Ball,Commond
+from mycode.models.account import Account, Game, Ball,Commond,GameClub
 
 
 @admin.register(Account)
@@ -22,3 +22,8 @@ class BallAdmin(admin.ModelAdmin):
 @admin.register(Commond)
 class CommondAdmin(admin.ModelAdmin):
     list_display = ('content',)
+
+@admin.register(GameClub)
+class CommondAdmin(admin.ModelAdmin):
+    list_display = ('club_slogan','club_desc'
+                    ,'club_title','club_post','club_grade','club_project','club_number')

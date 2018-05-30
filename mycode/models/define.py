@@ -18,14 +18,24 @@ else:
     print(get_mac_address())
     MEDIAURL = 'http://127.0.0.1:8000/media/'
 
+#微信小程序app-id/secret
 WEICHAT_APPID='wxc218fa7c51381f48'
 WEICHAT_SECRET= 'a4d7d52fcc1fb3293c25245bdff07baf'
+
+
 
 GENDER = (
         (1, '男'),
         (2, '女'),
         (0, '未知')
     )
+
+
+# CLUB_GAMES = (
+#         (1, '比赛'),
+#         (2, '娱乐'),
+#         (0, '聚餐')
+#     )
 
 GAME_STATUS = (
         (0, '过期'), #时间结束
@@ -49,6 +59,8 @@ WE_CHAT_LOGIN = ['code']
 
 GET_GAME_LIST = ['ball_id']
 
+
+
 GET_GAME_DETAIL = ['game_id','openid']
 
 GET_GAME_APPLEMENT = ['game_id','openid','number_count']
@@ -64,6 +76,31 @@ GET_GAME_LIST_KEYWORD = ['keyword','ball_id']
 CREATE_GAME = ['game_title','game_subtitle','openid','ball_id','game_location','game_location_detail',
                'game_price','game_start_time','game_end_time','game_referee',
                'game_number','game_place_condition','number','lat','lng']
+
+
+GET_CLUB_CREATE = ['openid','club_slogan','club_desc','club_title','club_post','club_grade'
+                   ,'club_project','club_number','ball_id']
+MY_GAME_CLUB_LIST = []
+
+MY_GAME_CLUB_DETAIL = ['openid','club_id']
+
+UNREAD_MESSAGE = ['openid','tag_openid','message_type']
+
+INVETE_MESSAGE = ['club_id','tag_openid','message_type']
+
+UNREAD_MESSAGE_CLUN_MANAGER = ['openid','club_id','message_type']
+
+UNREAD_MESSAGE_USER = ['openid']
+
+LEAVE_GAME_CLUB = ['openid','club_id']
+
+DISSOLVE_GAME_CLUB = ['openid','club_id']
+
+CHANGE_CLUB_USER = ['status','unread_id']
+
+UPLOAD_CLUB_IMAGE = ['openid','club_id','content','file']
+
+INVETE_GAME_CLUB_USER = ['openid','club_id','game_id','message_type']
 
 #时间戳转换
 def timeStamp_to_date(timeStamp):
@@ -96,7 +133,11 @@ def request_verif(request_body,request_list):
     data = {}
     error = False
     data['errors'] = []
-    jsonData = json.loads(request_body.body.decode('utf-8'))
+    try:
+        jsonData = json.loads(request_body.body.decode('utf-8'))
+    except:
+        print(request_body)
+        return request_body.POST,None
     if request_body.method == 'POST':
         for p in request_list:
             if p not in jsonData:

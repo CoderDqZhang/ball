@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from mycode.models import define
 import logging
 from django.forms.models import model_to_dict
-from mycode.models.account import Account,GameClub,Ball,UnreadMessage,Game,Apointment
+from mycode.models.account import Account,GameClub,Ball,UnreadMessage,Game,Apointment,GameClubImage
 from django.core import serializers
 import json
 from django.utils import timezone
@@ -14,6 +14,8 @@ import sys
 import importlib
 importlib.reload(sys)
 from django.core.files.base import ContentFile
+from mycode.utils import upload_qiniu
+
 
 # def upload_image(request):
 
@@ -32,6 +34,7 @@ def create_game_club(request):
                 ball = Ball.objects.get(id=ball_id)
                 data = {}
                 club_post = request.FILES.get("club_post", None)
+                images = upload_qiniu.qiniu_upload("club_image", club_post)
                 file_content = ContentFile(request.FILES.get('club_post').read())
                 game_club = GameClub.objects.create(
                     club_number = body.get('club_number'),
@@ -40,9 +43,9 @@ def create_game_club(request):
                     club_title = body.get('club_title'),
                     club_desc=body.get('club_desc'),
                     club_slogan=body.get('club_slogan'),
+                    club_post = images
                 )
                 game_club.club_ball.add(ball)
-                game_club.club_post.save(request.FILES.get('club_post').name,file_content)
                 print(request.FILES.get('club_post').name)
                 response = model_to_dict(game_club, exclude=['user',
                                                                    'club_manager','club_user','club_post'])
@@ -103,6 +106,28 @@ def my_game_club_list(request):
     else:
         return JsonResponse(define.response("success",0,"请使用POST方式请求"))
     return JsonResponse(data);
+
+#俱乐部
+def game_club_list(request):
+    if request.method == 'POST':
+        try:
+            body, checkrequest = define.request_verif(request, define.MY_GAME_CLUB_LIST)
+            if checkrequest is None:
+                data = {}
+                response = {}
+                data['club_list'] = []
+                club_list = GameClub.objects.all()
+                for x in club_list:
+                    data['club_list'].append(returngame_club(x))
+                return JsonResponse(define.response("success", 0, request_data = data))
+            else:
+                return JsonResponse(define.response("success", 0, checkrequest))
+        except  Account.DoesNotExist:
+            return JsonResponse(define.response("success", 0, "用户不存在"))
+    else:
+        return JsonResponse(define.response("success",0,"请使用POST方式请求"))
+    return JsonResponse(data);
+
 
 #邀请入群
 def invate_club(request):
@@ -299,6 +324,33 @@ def send_game_invate(request):
         return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
     return JsonResponse(data);
 
+def upload_game_club_image(request):
+    if request.method == 'POST':
+        try:
+            body, checkrequest = define.request_verif(request, define.UPLOAD_CLUB_IMAGE)
+            if checkrequest is None:
+                data = {}
+                user = Account.objects.filter(openid__exact=body.get('openid'))
+                game_club = GameClub.objects.get(id=body.get('club_id'))
+                files = request.FILES.get("club_image", None)
+                images = upload_qiniu.qiniu_upload("club_image",files)
+                club_image = GameClubImage.objects.create(
+                    image = images,
+                    content = body.get('content')
+                )
+                club_image.user.add(user)
+                club_image.game_club.add(user)
+                data['message'] = '上传成功'
+                return JsonResponse(define.response("success", 0, request_data=data))
+            else:
+                return JsonResponse(define.response("success", 0, checkrequest))
+        except  Account.DoesNotExist:
+            return JsonResponse(define.response("success", 0, "用户不存在"))
+    else:
+        return JsonResponse(define.response("success",0,"请使用POST方式请求"))
+    return JsonResponse(data);
+
+#俱乐部状态
 def club_status(request):
     if request.method == 'POST':
         try:
@@ -351,6 +403,7 @@ def club_status(request):
         return JsonResponse(define.response("success",0,"请使用POST方式请求"))
     return JsonResponse(data);
 
+#未读消息
 def unread_message(request):
     if request.method == 'POST':
         try:
@@ -388,7 +441,7 @@ def unread_message(request):
 
 
 def returngame_club(data,openid = None):
-    response = model_to_dict(data, exclude=['user', 'club_manager', 'club_user', 'club_post'
+    response = model_to_dict(data, exclude=['user', 'club_manager', 'club_user'
         , 'club_ball'])
     response['user'] = model_to_dict(Account.objects.get(openid=data.user.first().openid))
     # response['ball'] = model_to_dict(x.club_ball,exclude='image')
@@ -409,5 +462,4 @@ def returngame_club(data,openid = None):
         if openid != None:
             if model_to_dict(users)['openid'] == openid:
                 response['user_flag'] = 'user'
-    response['club_post'] = define.MEDIAURL + data.club_post.name
     return response

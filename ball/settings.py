@@ -24,6 +24,12 @@ SECRET_KEY = '52*p4fl8e0s4^6uwpyvuif!*(@3=olqda6rvwnurvgv%2h(rvn'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
+#七牛云存储
+QINIU_ACCESS_KEY = 'lGDN5XTYH4HWk_i7GRre-izRRk3AE7gmxL5u6I0t'
+QINIU_SECRET_KEY = 'vpryXIs8kIJ3pWUfGmK1Y4vnHhOCRO5xMDQwN50m'
+QINIU_BUCKET_NAME = 'ball'
+QINIU_BUCKET_DOMAIN = 'p9it92m77.bkt.clouddn.com'
+QINIU_SECURE_URL = True      #使用http
 
 ALLOWED_HOSTS = ['*']
 
@@ -31,8 +37,11 @@ STATIC_URL = '/static/'
 
 STATIC_PATH = os.path.join( os.path.dirname(__file__) , 'static' )
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
-MEDIA_URL = '/media/'
+MEDIA_URL = "https://"+QINIU_BUCKET_DOMAIN + "/"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
+# MEDIA_URL = '/media/'
 # Application definition
 
 import socket
@@ -176,12 +185,13 @@ USE_I18N = True
 USE_L10N = True
 
 
+DEFAULT_FILE_STORAGE = 'qiniustorage.backends.QiniuStorage'
+# STATICFILES_STORAGE  = 'qiniustorage.backends.QiniuStaticStorage'
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 HERE = os.path.dirname(os.path.dirname(__file__))
-print(HERE)
 
 STATICFILES_DIRS = ( os.path.join(HERE, "../ball/ball/static/").replace('\\', '/'), )
 STATIC_URL = '/static/'

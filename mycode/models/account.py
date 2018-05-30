@@ -76,6 +76,11 @@ class Game(models.Model):
 
     game_user_list = models.ManyToManyField( Apointment,related_name='game_list_user',  blank=True, null=True) # "赴约人",
 
+    #增加俱乐部控制
+    game_club_create = models.IntegerField("俱乐部创建", default=0)  # "场地条件",0表示非俱乐部成员创建
+    game_club = models.ManyToManyField('GameClub', related_name='game_club+', null=True, blank=True)
+    game_club_out = models.IntegerField('是否只允许俱乐部成员', blank=True, null=True, default=0)  # 0表示可以允许平台所有用户加入
+
 
 class Commond(models.Model):
     user = models.ManyToManyField(Account, related_name='Commond.user+', blank=True,null=True)
@@ -94,11 +99,11 @@ class GameClub(models.Model):
     club_slogan = models.CharField("口号", max_length=255, default='')  #"场地条件",
     club_desc = models.CharField("介绍", max_length=255, default='')  # "俱乐部介绍",
     club_title = models.CharField("名称", max_length=255, default='')  # "俱乐部介绍",
-    club_post = models.ImageField(upload_to='images/club',default='user1.jpg', blank=True, null=True)
-    club_grade = models.IntegerField(default=1)
+    club_post = models.CharField(max_length=255, blank=True, null=True)#俱乐部图片
+    club_grade = models.IntegerField(default=1)#俱乐部等级
     club_project = models.CharField("项目介绍", max_length=255, default='')
     club_number = models.IntegerField(default=0) #人数限制，0为不限制人数
-
+    club_status = models.IntegerField(default=0) #0表示可以允许成员申请，1表示只能通过邀请加入
 
 class UnreadMessage(models.Model):
     user_openid = models.ManyToManyField(Account,related_name='unread_create_user+', blank=True) #"创建用户",
@@ -108,3 +113,11 @@ class UnreadMessage(models.Model):
     message_type_desc = models.CharField("类型介绍", max_length=255, default='申请入群')
     unread_club = models.ManyToManyField(GameClub,related_name='club_game+', blank=True) #"创建用户",
     unread_game = models.ManyToManyField(Game, related_name='game_ball+', blank=True)  # "创建用户",
+
+class GameClubImage(models.Model):
+    user = models.ManyToManyField(Account,related_name='image_create_user+', blank=True) #"谁上传的",
+    game_club = models.ManyToManyField(GameClub,related_name='game_club+', blank=True) #"上传的俱乐部对象",
+    image = models.CharField(max_length=255, blank=True, null=True)#俱乐部图片
+    content = models.CharField("图片介绍", max_length=255, default='')
+    url = models.URLField(null=True,blank=True)
+    createTime = models.DateField(auto_created=True, auto_now_add=True)#创建时间

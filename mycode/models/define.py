@@ -18,8 +18,11 @@ else:
     print(get_mac_address())
     MEDIAURL = 'http://127.0.0.1:8000/media/'
 
+#微信小程序app-id/secret
 WEICHAT_APPID='wxc218fa7c51381f48'
 WEICHAT_SECRET= 'a4d7d52fcc1fb3293c25245bdff07baf'
+
+
 
 GENDER = (
         (1, '男'),
@@ -77,7 +80,7 @@ CREATE_GAME = ['game_title','game_subtitle','openid','ball_id','game_location','
 
 GET_CLUB_CREATE = ['openid','club_slogan','club_desc','club_title','club_post','club_grade'
                    ,'club_project','club_number','ball_id']
-MY_GAME_CLUB_LIST = ['openid']
+MY_GAME_CLUB_LIST = []
 
 MY_GAME_CLUB_DETAIL = ['openid','club_id']
 
@@ -94,6 +97,8 @@ LEAVE_GAME_CLUB = ['openid','club_id']
 DISSOLVE_GAME_CLUB = ['openid','club_id']
 
 CHANGE_CLUB_USER = ['status','unread_id']
+
+UPLOAD_CLUB_IMAGE = ['openid','club_id','content','file']
 
 INVETE_GAME_CLUB_USER = ['openid','club_id','game_id','message_type']
 
@@ -131,6 +136,7 @@ def request_verif(request_body,request_list):
     try:
         jsonData = json.loads(request_body.body.decode('utf-8'))
     except:
+        print(request_body)
         return request_body.POST,None
     if request_body.method == 'POST':
         for p in request_list:

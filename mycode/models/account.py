@@ -121,3 +121,9 @@ class GameClubImage(models.Model):
     content = models.CharField("图片介绍", max_length=255, default='')
     url = models.URLField(null=True,blank=True)
     createTime = models.DateField(auto_created=True, auto_now_add=True)#创建时间
+
+class IM(models.Model):
+    game = models.OneToOneField(Game,related_name='game_im+', blank=True,null=True,on_delete=models.CASCADE)
+    game_club = models.OneToOneField(GameClub, related_name='game_club_im+', blank=True, null=True,on_delete=models.CASCADE)
+    room = models.CharField("群id", max_length=255)
+    createTime = models.DateField(auto_created=True, auto_now_add=True)  # 创建时间

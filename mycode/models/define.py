@@ -57,6 +57,8 @@ COMMOND_USER_INFO = ['openid','targid','content','userrank','skillrank','anonymi
 
 WE_CHAT_LOGIN = ['code']
 
+USER_SIGN_TLS = ['openid','appid']
+
 GET_GAME_LIST = ['ball_id']
 
 
@@ -101,6 +103,8 @@ CHANGE_CLUB_USER = ['status','unread_id']
 UPLOAD_CLUB_IMAGE = ['openid','club_id','content','file']
 
 INVETE_GAME_CLUB_USER = ['openid','club_id','game_id','message_type']
+
+GET_IM_GROUP_ID = ['game_id','club_id']
 
 #时间戳转换
 def timeStamp_to_date(timeStamp):

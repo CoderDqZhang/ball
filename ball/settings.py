@@ -37,11 +37,13 @@ STATIC_URL = '/static/'
 
 STATIC_PATH = os.path.join( os.path.dirname(__file__) , 'static' )
 
+#七牛保存图片
 MEDIA_URL = "https://"+QINIU_BUCKET_DOMAIN + "/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
-# MEDIA_URL = '/media/'
+#本地保存图片
+MEDIA_ROOT1 = os.path.join(BASE_DIR, 'media').replace('\\', '/')
+MEDIA_URL1 = '/media/'
 # Application definition
 
 import socket

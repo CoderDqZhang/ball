@@ -24,5 +24,9 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^ball/', include('mycode.urls.urls')),
 ]
+#七牛保存文件路径
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#本地保存文件路径
+urlpatterns += static(settings.MEDIA_URL1, document_root=settings.MEDIA_ROOT1)
+#静态文件路径
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

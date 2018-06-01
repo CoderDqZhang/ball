@@ -1,12 +1,16 @@
-from mycode.ball_views import account_view, game, game_club
+from mycode.ball_views import account_view, game, game_club,tsl,tencent_im
 from django.conf.urls import url
 import os
 from ball import settings
 
 
 urlpatterns = [
-#User
+
+#TEST
     url('^test/', account_view.test),
+    url('^sendermsg',account_view.testsend_msg),
+#User
+    url('^login/tenim', tsl.verify_sign),
     url('^wechatlogin/',account_view.verify_user),
     url('^updateuserinfo/',account_view.update_user_info),
     url('^getuserinfo/',account_view.get_user_info),
@@ -37,5 +41,7 @@ urlpatterns = [
     url('^dissolvegameclub',game_club.dissolve_game_club),
     url('^clubgamedetail',game_club.club_game_detail),
     url('^unreadmessage',game_club.unread_message),
-    url('^upload/gameclub/image',game_club.upload_game_club_image)
+    url('^upload/gameclub/image',game_club.upload_game_club_image),
+  #im
+    url('^im/group',tencent_im.get_im_group_id)
 ]

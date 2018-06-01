@@ -12,6 +12,7 @@ import sys
 import importlib
 importlib.reload(sys)
 from django.db.models import Q
+from mycode.ball_views import tencent_im
 from django.db.models.aggregates import Count
 from django.db.models import Sum
 
@@ -143,6 +144,7 @@ def game_create(request):
                 response['ball'] = model_to_dict(ball,exclude='image')
                 response['ball']['image'] = ball.image.name
                 data['game'] = response
+                tencent_im.game_create_group(game)
                 return JsonResponse(define.response("success", 0, data))
             else:
                 return JsonResponse(define.response("success", 0, checkrequest))

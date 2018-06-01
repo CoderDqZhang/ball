@@ -5,7 +5,8 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.forms.models import model_to_dict
-from mycode.models.account import Account,Commond
+from mycode.models.account import Account,Commond,Game,GameClub
+from mycode.ball_views import tencent_im
 from .checkuser import checkdata
 import logging
 from mycode.models import define
@@ -240,5 +241,9 @@ def get_user_other_conmmend(request):
     return JsonResponse(data);
 
 def test(request):
-    define.getaddress('朝阳公园')
+    print(tencent_im.game_club_create_group(GameClub.objects.first()))
+    return JsonResponse({'success':'成功'})
+
+def testsend_msg(request):
+    print(tencent_im.sender_msg('admin'))
     return JsonResponse({'success':'成功'})

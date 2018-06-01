@@ -8,6 +8,7 @@ from django.core import serializers
 import json
 from django.utils import timezone
 from mycode.ball_views.game import returngame_detail
+from mycode.ball_views import tencent_im
 import datetime
 from django.db.models import Q
 import sys
@@ -53,6 +54,7 @@ def create_game_club(request):
                 response['club_post'] =  define.MEDIAURL + request.FILES.get('club_post').name
                 response['create_user'] = model_to_dict(user)
                 data['game_club'] = response
+                tencent_im.game_club_create_group(game_club)
                 return JsonResponse(define.response("success", 0, data))
             else:
                 return JsonResponse(define.response("success", 0, checkrequest))

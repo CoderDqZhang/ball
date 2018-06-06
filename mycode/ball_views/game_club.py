@@ -331,7 +331,8 @@ def upload_game_club_image(request):
             body, checkrequest = define.request_verif(request, define.UPLOAD_CLUB_IMAGE)
             if checkrequest is None:
                 data = {}
-                user = Account.objects.filter(openid__exact=body.get('openid'))
+                print(body.get('club_id'))
+                user = Account.objects.get(openid=body.get('openid'))
                 game_club = GameClub.objects.get(id=body.get('club_id'))
                 files = request.FILES.get("club_image", None)
                 images = upload_qiniu.qiniu_upload("club_image",files)
@@ -340,8 +341,28 @@ def upload_game_club_image(request):
                     content = body.get('content')
                 )
                 club_image.user.add(user)
-                club_image.game_club.add(user)
+                club_image.game_club.add(game_club)
                 data['message'] = '上传成功'
+                return JsonResponse(define.response("success", 0, request_data=data))
+            else:
+                return JsonResponse(define.response("success", 0, checkrequest))
+        except  Account.DoesNotExist:
+            return JsonResponse(define.response("success", 0, "用户不存在"))
+    else:
+        return JsonResponse(define.response("success",0,"请使用POST方式请求"))
+    return JsonResponse(data);
+
+def get_game_club_images(request):
+    if request.method == 'POST':
+        try:
+            body, checkrequest = define.request_verif(request, define.GET_CLUB_IMAGES)
+            if checkrequest is None:
+                data = {}
+                images = GameClubImage.objects.filter(game_club__exact = body['club_id'])
+                data['images'] = []
+                for image in images:
+                    data['images'].append(model_to_dict(image,
+                                                        exclude=['user','game_club','content','createTime','url']))
                 return JsonResponse(define.response("success", 0, request_data=data))
             else:
                 return JsonResponse(define.response("success", 0, checkrequest))

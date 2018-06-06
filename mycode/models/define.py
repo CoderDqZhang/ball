@@ -106,6 +106,7 @@ INVETE_GAME_CLUB_USER = ['openid','club_id','game_id','message_type']
 
 GET_IM_GROUP_ID = ['game_id','club_id']
 
+GET_CLUB_IMAGES = ['club_id']
 #时间戳转换
 def timeStamp_to_date(timeStamp):
     dateArray = datetime.datetime.utcfromtimestamp(float(timeStamp))

@@ -7,7 +7,7 @@ from ball import settings
 urlpatterns = [
 
 #TEST
-    url('^test/', account_view.test),
+    url('^create_Im/', account_view.create_Im),
     url('^sendermsg',account_view.testsend_msg),
 #User
     url('^login/tenim', tsl.verify_sign),

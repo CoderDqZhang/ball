@@ -124,7 +124,8 @@ def game_create(request):
                     game_place_condition=body['game_place_condition'],
 
                 )
-                if body['club_create'] != None:
+
+                if 'club_create' in body:
                     game.game_club_create = body['club_create']
                     game.game_club_out = body['club_out']
                     game.game_club.add(GameClub.objects.get(id=body['club_id']))

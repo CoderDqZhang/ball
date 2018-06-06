@@ -64,9 +64,9 @@ def game_create_group(game):
     im.save()
 
 def game_club_create_group(game_club):
-    room = create_group('game_club-'+str(game_club.id), 'admin')['GroupId']
+    room = create_group('game_club-'+str(game_club.id), 'admin')
     im = IM.objects.create(
-        room = room
+        room = room['GroupId']
     )
     im.game_club = game_club
     im.save()
@@ -82,7 +82,6 @@ def get_im_group_id(request):
             if im is None:
                 return JsonResponse(define.response("success", 0, "群组不存在"))
             else:
-                print(im)
                 data = model_to_dict(im)
                 return JsonResponse(define.response("success", 0, None, request_data=data))
         else:
@@ -90,3 +89,5 @@ def get_im_group_id(request):
     else:
         return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
     return JsonResponse(data);
+
+

@@ -88,29 +88,34 @@ def verify_user(request):
         if checkrequest is None:
             code = body['code']
             openid = define.getopenid(code)
+            print(openid)
             try:
                 user = Account.objects.get(openid=openid)
+                print(user)
                 data['user'] = model_to_dict(user)
-                print(data)
                 return JsonResponse(define.response("success", 0, None, data))
             except Account.DoesNotExist:
-                user_ins = User.objects.create_user(
-                    username=openid,
-                    password=openid
-                )
-                user_ins.save()
-                user_ins.is_active = True
+                try:
+                    user_ins =  User.objects.get(username=openid)
+                except :
+                    user_ins = User.objects.create_user(
+                        username=openid,
+                        password=openid
+                    )
+                    user_ins.save()
+                    user_ins.is_active = True
+                print(body['avatar'])
+
                 account = Account.objects.create(
                     user=user_ins,
                     openid=openid,
-                    nickname = body['nickname'],
-                    province = body['province'],
-                    city = body['city'],
-                    gender = body['gender'],
-                    avatar = body['avatar']
+                    # nickname = body['nickname'],
+                    # province = body['province'],
+                    # city = body['city'],
+                    # gender = body['gender'],
+                    # avatar = body['avatar']
                 )
                 data['user'] = model_to_dict(Account.objects.get(openid=openid))
-                print(data)
                 return JsonResponse(define.response("success", 0, None, data))
             else:
                 return JsonResponse(define.response("success", 0, checkrequest))
@@ -241,9 +246,9 @@ def get_user_other_conmmend(request):
     return JsonResponse(data);
 
 def create_Im(request):
-    games = Game.objects.all()
-    for game in games:
-        tencent_im.game_create_group(game)
+    # games = Game.objects.all()
+    # for game in games:
+    #     tencent_im.game_create_group(game)
     games_clubs = GameClub.objects.all()
     for game_club in games_clubs:
         tencent_im.game_club_create_group(game_club)

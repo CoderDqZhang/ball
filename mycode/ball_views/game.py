@@ -207,6 +207,7 @@ def cancel_game_appointment(request):
             if detail is None:
                 return JsonResponse(define.response("success", 0, "球约不存在"))
             else:
+                detail.game_user_list.remove(Account.objects.get(openid=openid))
                 data = returngame_detail(detail,openid)
                 return JsonResponse(define.response("success", 0, None, data))
         else:

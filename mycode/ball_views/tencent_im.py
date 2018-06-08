@@ -39,7 +39,7 @@ def sender_msg(openid):
           "usersig="+usersig.decode()+"&identifier="+openid+"&" \
           "sdkappid="+str(sdkappid)+"&random="+str(ran)+"&contenttype=json"
     values = {
-        "GroupId": "@TGS#a2JBRZHFI",
+        "GroupId": "@TGS#a72JQCIFF",
         "Random": random.randint(1, 999999999),
         "MsgBody": [ {
             "MsgType": "TIMTextElem",
@@ -52,6 +52,35 @@ def sender_msg(openid):
                 "Index": 6,
                 "Data": "abc\u0000\u0001"
             }
+        }]}
+    return network.request_post(url, values)
+
+def sender_image(openid):
+    usersig = TLS.main(sdkappid, openid)
+    ran = str(random.randint(1, 999999999))
+    url = "https://console.tim.qq.com/v4/group_open_http_svc/send_group_msg?" \
+          "usersig="+usersig.decode()+"&identifier="+openid+"&" \
+          "sdkappid="+str(sdkappid)+"&random="+str(ran)+"&contenttype=json"
+    values = {
+        "GroupId": "@TGS#a72JQCIFF",
+        "Random": random.randint(1, 999999999),
+        "MsgBody": [ {
+            "MsgType": "TIMImageElem",
+            "MsgContent": {
+                "UUID": "1853095_D61040894AC3DE44CDFFFB3EC7EB720F",
+                "ImageFormat": 1,
+                "ImageInfoArray": [
+                {
+                    "Type": 1,
+                    "Size": 1853095,
+                    "Width": 2448,
+                    "Height": 3264,
+                    "URL": "https://timgsa.baidu.com/timg?image&quality=80"
+                           "&size=b9999_10000&sec=1529029128&di=686b2af48150493488441ea9a83c934b&imgtype=jpg"
+                           "&er=1&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F016c4f5721807732f875a3992ba4d6.jpg"
+                }
+            ]
+            },
         }]}
     return network.request_post(url, values)
 

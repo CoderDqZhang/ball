@@ -255,5 +255,6 @@ def create_Im(request):
     return JsonResponse({'success':'成功'})
 
 def testsend_msg(request):
-    print(tencent_im.sender_msg('admin'))
+    print(tencent_im.sender_image('admin'))
+    # print(tencent_im.sender_msg('admin'))
     return JsonResponse({'success':'成功'})

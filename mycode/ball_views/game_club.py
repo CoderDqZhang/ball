@@ -239,8 +239,8 @@ def leave_game_club(request):
                 openid = body['openid']
                 club_id = body['club_id']
                 clubs = GameClub.objects.get(id=club_id)
-                clubs.club_manager.filter(openid__exact=openid).delete()
-                clubs.club_user.filter(openid__exact=openid).delete()
+                clubs.club_manager.remove(Account.objects.get(openid=openid))
+                clubs.club_user.remove(Account.objects.get(openid=openid))
                 data = {}
                 response = {}
                 data["message"] = "退出成功"
@@ -264,6 +264,9 @@ def dissolve_game_club(request):
                 openid = body['openid']
                 club_id = body['club_id']
                 clubs = GameClub.objects.get(id=club_id)
+                if clubs.club_manager.all().count() == 0 and clubs.club_user.all().count() == 0:
+                    data["message"] = "解散失败"
+                    return JsonResponse(define.response("success", 0, request_data=data))
                 ret = clubs.club_user.filter(openid__exact=openid)
                 if ret.count() > 0:
                     data["message"] = "解散成功"
@@ -294,25 +297,38 @@ def send_game_invate(request):
                 game = Game.objects.get(id=game_id)
                 user = Account.objects.get(openid=openid)
                 for tag_user in clubs.club_manager.all():
-                    unread = UnreadMessage.objects.create(
-                        message_type=body['message_type'],
-                        message_type_desc='球约邀请',
-                        read_flag=0
-                    )
-                    unread.user_openid.add(user)
-                    unread.tag_user_openid.add(tag_user)
-                    unread.unread_club.add(clubs)
-                    unread.unread_game.add(game)
+                    if tag_user.openid is not openid:
+                        unread = UnreadMessage.objects.create(
+                            message_type=body['message_type'],
+                            message_type_desc='球约邀请',
+                            read_flag=0
+                        )
+                        unread.user_openid.add(user)
+                        unread.tag_user_openid.add(tag_user)
+                        unread.unread_club.add(clubs)
+                        unread.unread_game.add(game)
                 for tag_user in clubs.club_user.all():
-                    unread = UnreadMessage.objects.create(
-                        message_type=body['message_type'],
-                        message_type_desc='球约邀请',
-                        read_flag=0
-                    )
-                    unread.user_openid.add(user)
-                    unread.tag_user_openid.add(tag_user)
-                    unread.unread_club.add(clubs)
-                    unread.unread_game.add(game)
+                    if tag_user.openid is not openid:
+                        unread = UnreadMessage.objects.create(
+                            message_type=body['message_type'],
+                            message_type_desc='球约邀请',
+                            read_flag=0
+                        )
+                        unread.user_openid.add(user)
+                        unread.tag_user_openid.add(tag_user)
+                        unread.unread_club.add(clubs)
+                        unread.unread_game.add(game)
+                for tag_user in clubs.user.all():
+                    if tag_user.openid is not openid:
+                        unread = UnreadMessage.objects.create(
+                            message_type=body['message_type'],
+                            message_type_desc='球约邀请',
+                            read_flag=0
+                        )
+                        unread.user_openid.add(user)
+                        unread.tag_user_openid.add(tag_user)
+                        unread.unread_club.add(clubs)
+                        unread.unread_game.add(game)
                 data = {}
                 response = {}
                 data["message"] = "邀请成功"
@@ -331,7 +347,6 @@ def upload_game_club_image(request):
             body, checkrequest = define.request_verif(request, define.UPLOAD_CLUB_IMAGE)
             if checkrequest is None:
                 data = {}
-                print(body.get('club_id'))
                 user = Account.objects.get(openid=body.get('openid'))
                 game_club = GameClub.objects.get(id=body.get('club_id'))
                 files = request.FILES.get("club_image", None)

@@ -82,6 +82,10 @@ CREATE_GAME = ['game_title','game_subtitle','openid','ball_id','game_location','
 
 GET_CLUB_CREATE = ['openid','club_slogan','club_desc','club_title','club_post','club_grade'
                    ,'club_project','club_number','ball_id']
+
+UPDATE_CLUB_CREATE = ['club_id','openid','club_slogan','club_desc','club_title'
+                   ,'club_project','club_number']
+
 MY_GAME_CLUB_LIST = []
 
 MY_GAME_CLUB_DETAIL = ['openid','club_id']

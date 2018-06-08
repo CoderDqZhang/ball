@@ -43,6 +43,7 @@ urlpatterns = [
     url('^unreadmessage',game_club.unread_message),
     url('^upload/gameclub/image',game_club.upload_game_club_image),
     url('^gameclub/image',game_club.get_game_club_images),
+    url('^gameclub/updateinfo',game_club.update_game_club_info),
   #im
     url('^im/group',tencent_im.get_im_group_id)
 ]

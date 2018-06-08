@@ -30,7 +30,6 @@ def create_game_club(request):
             if checkrequest is None:
                 openid = body.get('openid')
                 ball_id = body.get('club_ball')
-                print(body)
                 user = Account.objects.get(openid=openid)
                 ball = Ball.objects.get(id=ball_id)
                 data = {}
@@ -378,6 +377,40 @@ def get_game_club_images(request):
                 for image in images:
                     data['images'].append(model_to_dict(image,
                                                         exclude=['user','game_club','content','createTime','url']))
+                return JsonResponse(define.response("success", 0, request_data=data))
+            else:
+                return JsonResponse(define.response("success", 0, checkrequest))
+        except  Account.DoesNotExist:
+            return JsonResponse(define.response("success", 0, "用户不存在"))
+    else:
+        return JsonResponse(define.response("success",0,"请使用POST方式请求"))
+    return JsonResponse(data);
+
+
+def update_game_club_info(request):
+    if request.method == 'POST':
+        try:
+            body, checkrequest = define.request_verif(request, define.UPDATE_CLUB_CREATE)
+            if checkrequest is None:
+                club_id = body.get('club_id')
+
+                club = GameClub.objects.get(id=club_id)
+                club.club_number = body.get('club_number')
+                club.club_project = body.get('club_project')
+                club.club_grade = body.get('club_grade')
+                club.club_title = body.get('club_title')
+                club.club_desc = body.get('club_desc')
+                club.club_slogan = body.get('club_slogan')
+                data = {}
+                try:
+                    club_post = request.FILES.get("club_post", None)
+                    images = upload_qiniu.qiniu_upload("club_image", club_post)
+                    club.club_post = images
+                    club.save()
+                    data['image'] = images
+                except:
+                    club.save()
+                data['message'] = "修改成功"
                 return JsonResponse(define.response("success", 0, request_data=data))
             else:
                 return JsonResponse(define.response("success", 0, checkrequest))

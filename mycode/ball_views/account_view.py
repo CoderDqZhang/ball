@@ -246,9 +246,9 @@ def get_user_other_conmmend(request):
     return JsonResponse(data);
 
 def create_Im(request):
-    # games = Game.objects.all()
-    # for game in games:
-    #     tencent_im.game_create_group(game)
+    games = Game.objects.all()
+    for game in games:
+        tencent_im.game_create_group(game)
     games_clubs = GameClub.objects.all()
     for game_club in games_clubs:
         tencent_im.game_club_create_group(game_club)

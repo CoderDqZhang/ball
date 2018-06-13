@@ -1,4 +1,4 @@
-from mycode.ball_views import account_view, game, game_club,tsl,tencent_im
+from mycode.ball_views import account_view, game, game_club,tsl,tencent_im,game_report
 from django.conf.urls import url
 import os
 from ball import settings
@@ -45,5 +45,10 @@ urlpatterns = [
     url('^gameclub/image',game_club.get_game_club_images),
     url('^gameclub/updateinfo',game_club.update_game_club_info),
   #im
-    url('^im/group',tencent_im.get_im_group_id)
+    url('^im/group',tencent_im.get_im_group_id),
+    #game_club_report
+    url('^gamereport/create/',game_report.create_game_report),
+    url('^gamereport/list/',game_report.get_game_club_report_list),
+    url('^gamereport/detail/',game_report.get_game_club_detail),
+
 ]

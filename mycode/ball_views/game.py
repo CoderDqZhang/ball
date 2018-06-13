@@ -3,7 +3,9 @@ from django.http import JsonResponse
 from mycode.models import define
 import logging
 from django.forms.models import model_to_dict
-from mycode.models.account import Ball,Game,Account,Apointment,GameClub
+from mycode.models.account import Account
+from mycode.models.game_club import GameClub
+from mycode.models.game import Ball,Game,Apointment
 from django.core import serializers
 import json
 from django.utils import timezone
@@ -302,9 +304,12 @@ def returngame_detail(detail,openid = None):
     data = {}
     data["game_detail"] = model_to_dict(detail, exclude=['game_create_user','game_club', 'game_detail', 'game_user_list',
                                                          ])
-    user = detail.game_create_user.first()
-
-    data["game_detail"]['user'] = model_to_dict(detail.game_create_user.first())
+    try:
+        user = detail.game_create_user.get()
+        data["game_detail"]['user'] = model_to_dict(detail.game_create_user.first())
+        print(user)
+    except:
+        print("非用户创建")
     image = define.MEDIAURL + detail.game_detail.get().image.name
     data["game_detail"]['ball'] = model_to_dict(detail.game_detail.get(), exclude='image')
     data["game_detail"]['ball']['image'] = image
@@ -318,11 +323,15 @@ def returngame_detail(detail,openid = None):
     for x in user_list:
         reponse = {}
         reponse['number_count'] = model_to_dict(x, exclude='user')
-        reponse['user'] = model_to_dict(Account.objects.get(openid=x.user.all().first().openid))
-        data["game_detail"]['user_list'].append(reponse)
-        reponse['user']['appointment_count'] = Game.objects.all().filter(
-            Q(game_user_list__user__openid__exact=x.user.all().first().openid)
-            | Q(game_create_user__openid=x.user.all().first().openid)).count()
-        if reponse['user']['openid'] == openid:
-            data["game_detail"]['appoint_ment'] = True
+        try:
+            openid = x.user.all().first().openid
+            reponse['user'] = model_to_dict(Account.objects.get(openid=openid))
+            data["game_detail"]['user_list'].append(reponse)
+            reponse['user']['appointment_count'] = Game.objects.all().filter(
+                Q(game_user_list__user__openid__exact=x.user.all().first().openid)
+                | Q(game_create_user__openid=x.user.all().first().openid)).count()
+            if reponse['user']['openid'] == openid:
+                data["game_detail"]['appoint_ment'] = True
+        except:
+            print("出现错误")
     return data

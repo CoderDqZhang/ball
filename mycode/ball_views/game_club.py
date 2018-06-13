@@ -3,12 +3,16 @@ from django.http import JsonResponse
 from mycode.models import define
 import logging
 from django.forms.models import model_to_dict
-from mycode.models.account import Account,GameClub,Ball,UnreadMessage,Game,Apointment,GameClubImage
+from mycode.models.account import Account
+from mycode.models.game import Ball,Game,Apointment
+from mycode.models.game_club import UnreadMessage,GameClub,GameClubImage
+from mycode.models.game_report import Game_club_report
 from django.core import serializers
 import json
 from django.utils import timezone
 from mycode.ball_views.game import returngame_detail
 from mycode.ball_views import tencent_im
+from mycode.ball_views import game_report
 import datetime
 from django.db.models import Q
 import sys
@@ -20,7 +24,7 @@ from mycode.utils import upload_qiniu
 
 # def upload_image(request):
 
-## message_type == 0 申请入群   message_type == 1 申请成为管理员 message_type == 2 邀请入群
+## message_type == 0 申请入群   message_type == 1 申请成为管理员 message_type == 2 邀请入群 message_type==3 俱乐部对抗赛
 
 #创建俱乐部
 def create_game_club(request):
@@ -340,6 +344,7 @@ def send_game_invate(request):
         return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
     return JsonResponse(data);
 
+
 def upload_game_club_image(request):
     if request.method == 'POST':
         try:
@@ -461,9 +466,22 @@ def club_status(request):
                         list.user.add(tag_user)
                         game.game_user_list.add(list)
                         data['message'] = '赴约成功'
+                    elif unread.message_type == 4:
+                        game_report = Game_club_report.objects.get(id=unread.unread_game_club_report.first().id)
+                        game_report.desc = '接受比赛'
+                        game_report.success = 1
+                        game_report.save()
+                        data['message'] = '接受比赛'
                     return JsonResponse(define.response("success", 0, request_data=data))
                 else:
-                    data["message"] = '拒绝入群'
+                    if unread.message_type == 4:
+                        game_report = Game_club_report.objects.get(id=unread.unread_game_club_report.first().id)
+                        game_report.desc = '拒绝比赛'
+                        game_report.success = 0
+                        game_report.save()
+                        data['message'] = '拒绝比赛'
+                    else:
+                        data["message"] = '拒绝入群'
                     return JsonResponse(define.response("success", 0, request_data=data))
             else:
                 return JsonResponse(define.response("success", 0, checkrequest))
@@ -490,7 +508,6 @@ def unread_message(request):
                     if x.user_openid.all().count() == 0:
                         data['message'] = '出现错误'
                         return JsonResponse(define.response("success", 0, request_data=data))
-                    print(x.user_openid.all())
                     response['user'] = model_to_dict(Account.objects.get(openid=x.user_openid.first().openid))
                     response['tag_user'] = model_to_dict(Account.objects.get(openid=openid))
                     print(x.unread_club)
@@ -498,6 +515,10 @@ def unread_message(request):
                         response['unread_club'] = returngame_club(x.unread_club.first())
                     elif x.message_type == 3:
                         response['unread_game'] = returngame_detail(x.unread_game.first(),openid)
+                    elif x.message_type == 4:
+                        print(x.unread_game_club_report.first())
+                        response['unread_game_club_report'] = game_report.get_game_club_report(
+                            x.unread_game_club_report.first())
                     data['unread_message'].append(response)
                 return JsonResponse(define.response("success", 0, request_data = data))
             else:

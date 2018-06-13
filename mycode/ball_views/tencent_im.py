@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.forms.models import model_to_dict
-from mycode.models.account import Account,Commond,Game,GameClub
+from mycode.models.account import Account,Commond
 from mycode.ball_views import tencent_im
 from django.db.models import Q
 from .checkuser import checkdata

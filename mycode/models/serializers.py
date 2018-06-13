@@ -1,6 +1,7 @@
 # coding=utf-8
 from rest_framework import serializers
-from mycode.models.account import Account,Ball,Game
+from mycode.models.account import Account
+from mycode.models.game import Ball,Game
 from rest_framework import routers, serializers, viewsets
 
 

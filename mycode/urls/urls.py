@@ -1,4 +1,4 @@
-from mycode.ball_views import account_view, game, game_club
+from mycode.ball_views import account_view, game, game_club, game_report
 from django.conf.urls import url
 import os
 from ball import settings
@@ -37,5 +37,11 @@ urlpatterns = [
     url('^dissolvegameclub',game_club.dissolve_game_club),
     url('^clubgamedetail',game_club.club_game_detail),
     url('^unreadmessage',game_club.unread_message),
-    url('^upload/gameclub/image',game_club.upload_game_club_image)
+    url('^upload/gameclub/image',game_club.upload_game_club_image),
+    url('^gameclub/image/',game_club.)
+#game_club_report
+    url('^gamereport/create/',game_report.create_game_report),
+    url('^gamereport/list/',game_report.get_game_club_report_list),
+    url('^gamereport/detail/',game_report.get_game_club_detail),
+
 ]

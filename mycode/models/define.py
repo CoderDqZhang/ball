@@ -59,8 +59,6 @@ WE_CHAT_LOGIN = ['code']
 
 GET_GAME_LIST = ['ball_id']
 
-
-
 GET_GAME_DETAIL = ['game_id','openid']
 
 GET_GAME_APPLEMENT = ['game_id','openid','number_count']
@@ -80,7 +78,8 @@ CREATE_GAME = ['game_title','game_subtitle','openid','ball_id','game_location','
 
 GET_CLUB_CREATE = ['openid','club_slogan','club_desc','club_title','club_post','club_grade'
                    ,'club_project','club_number','ball_id']
-MY_GAME_CLUB_LIST = []
+
+MY_GAME_CLUB_LIST = ['openid']
 
 MY_GAME_CLUB_DETAIL = ['openid','club_id']
 
@@ -102,6 +101,11 @@ UPLOAD_CLUB_IMAGE = ['openid','club_id','content','file']
 
 INVETE_GAME_CLUB_USER = ['openid','club_id','game_id','message_type']
 
+CREATE_GAME_REPORT = ['openid','club_idA','club_idB','game_id']
+
+GAME_CLUB_REPORT_LIST = []
+
+GAME_CLUB_REPORT_DETAIL = ['game_report_id']
 #时间戳转换
 def timeStamp_to_date(timeStamp):
     dateArray = datetime.datetime.utcfromtimestamp(float(timeStamp))
@@ -120,7 +124,7 @@ def response(status,code,msg = None,request_data = None):
     data['status'] = status
     data['code'] = code
     if msg is not None:
-        data['msg'] = msg
+        data['message'] = msg
     if request_data is not None:
         data['data'] = request_data
     return data
@@ -133,23 +137,28 @@ def request_verif(request_body,request_list):
     data = {}
     error = False
     data['errors'] = []
-    try:
-        jsonData = json.loads(request_body.body.decode('utf-8'))
-    except:
-        print(request_body)
-        return request_body.POST,None
+    if len(request_list) != 0:
+        print(len(request_list))
+        try:
+            jsonData = json.loads(request_body.body.decode('utf-8'))
+        except json.decoder.JSONDecodeError:
+            error = True
+            data['errors'].append({"参数错误": "未传值"})
+            return None,data
+        except:
+            return  None,data['errors'].append({"error":"error"})
+    else:
+        return request_body, None
     if request_body.method == 'POST':
         for p in request_list:
             if p not in jsonData:
                 data['errors'].append({"参数错误":p+"未传值"})
-                print(p)
                 error = True
             else:
                 if (jsonData[p] == None):
                     data['errors'].append({'error':errors.ERRORS[p]})
                     error = True
-                print(jsonData[p])
-    elif request_body.method == 'GET':
+    elif request_body.method is 'GET':
         for p in request_list:
             if p not in request_body.GET:
                 data['errors'].append({"参数错误":p+"未传值"})

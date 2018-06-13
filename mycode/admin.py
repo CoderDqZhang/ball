@@ -1,6 +1,8 @@
 from django.contrib import admin
 
-from mycode.models.account import Account, Game, Ball,Commond,GameClub
+from mycode.models.account import Account,Commond
+from mycode.models.game import Game, Ball
+from mycode.models.game_club import GameClub
 
 
 @admin.register(Account)

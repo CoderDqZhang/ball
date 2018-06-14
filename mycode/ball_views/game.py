@@ -65,6 +65,7 @@ def game_list(request):
                     response['game_status'] = 0 # time done
                 else:
                     response['game_status'] = 1 # doing
+
                 response['user'] = model_to_dict(x.game_create_user.first())
                 data["game_list"].append(response);
             return JsonResponse(define.response("success", 0, None, data))
@@ -223,12 +224,25 @@ def my_game_appointment(request):
         body, checkrequest = define.request_verif(request, define.GET_MY_GAME_APPLEMENT)
         if checkrequest is None:
             openid = body['openid']
-            detail = Game.objects.all().filter(Q(game_user_list__user__openid__exact=openid)|Q(game_create_user__openid=openid)).order_by('-game_end_time')
+            detail = Game.objects.filter(Q(game_user_list__user__openid=openid)|Q(game_create_user__openid=openid))\
+                .order_by('-game_end_time')
             data = {}
+            data["game_list"] = []
             if detail is None:
                 return JsonResponse(define.response("success", 0, "球约不存在"))
             else:
-                data = returngame_detail(detail, openid)
+                for model in detail:
+                    response = model_to_dict(model,
+                                             exclude=['game_create_user', 'game_club', 'game_detail', 'game_user_list',
+                                                      ])
+                    user = model.game_create_user.first()
+                    if timezone.now() > model.game_end_time:
+                        response['game_status'] = 0  # time done
+                    else:
+                        response['game_status'] = 1  # doing
+
+                    response['user'] = model_to_dict(model.game_create_user.first())
+                    data["game_list"].append(response)
                 return JsonResponse(define.response("success", 0, None, data))
         else:
             return JsonResponse(define.response("success", 0, checkrequest))

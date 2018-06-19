@@ -8,6 +8,7 @@ class Game_club_report(models.Model):
     game_clubB = models.ManyToManyField('GameClub', related_name='game_clubB+', blank=False, null=False)
     price = models.IntegerField("总费用",default=0)
     score = models.CharField("比分",max_length=255,blank=True,null=False)
+    temp_score = models.CharField("预比分",max_length=255,blank=True,null=True,default="")
     award = models.CharField('奖品',max_length=255,blank=True,null=True)
     win_club = models.ManyToManyField('GameClub',related_name='game_club_win+',blank=True,null=True)
     success = models.IntegerField(default=0) #0表示成功,1表示失败

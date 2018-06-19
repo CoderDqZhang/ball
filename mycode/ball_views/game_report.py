@@ -7,6 +7,7 @@ from mycode.ball_views import game
 from mycode.ball_views import game_club
 from mycode.models.game_club import GameClub,UnreadMessage
 from mycode.models.account import Account
+from django.db.models import Q
 import logging
 from django.forms.models import model_to_dict
 
@@ -84,7 +85,8 @@ def get_game_club_detail(request):
             if checkrequest is None:
                 data = {}
                 report_id = body['game_report_id']
-                data['game_report'] = get_game_club_report(Game_club_report.objects.get(id=report_id))
+                openid = body['openid']
+                data['game_report'] = get_game_club_report(Game_club_report.objects.get(id=report_id), openid=openid)
 
                 return JsonResponse(define.response("success", 0, request_data=data))
             else:
@@ -95,11 +97,46 @@ def get_game_club_detail(request):
         return JsonResponse(define.response("success",0,"请使用POST方式请求"))
     return JsonResponse(data);
 
+def upload_game_report_sorce(request):
+    if request.method == 'POST':
+        try:
+            body, checkrequest = define.request_verif(request, define.GAME_CLUB_REPORT_SORC)
+            if checkrequest is None:
+                data = {}
+                report_id = body['game_report_id']
+                openid = body['openid']
+                tag_openid = body['tag_openid']
+                sorce = body['sorce']
+                game_report = Game_club_report.objects.get(id=report_id)
+                if game_report.temp_score != "":
+                    data['message'] = "比分已上传请等待对方确认"
+                    return JsonResponse(define.response("success", 0, request_data=data))
+                game_report.temp_score = sorce
+                game_report.save()
+                message = UnreadMessage.objects.create(
+                    message_type=5,
+                    message_type_desc='比分确认',
+                    read_flag=0
+                )
+                user = Account.objects.get(openid=openid)
+                message.user_openid.add(user)
+                message.tag_user_openid.add(Account.objects.get(openid=tag_openid))
+                message.unread_game_club_report.add(game_report)
+                data['message'] = "上传成功"
+                return JsonResponse(define.response("success", 0, request_data=data))
+            else:
+                return JsonResponse(define.response("success", 0, checkrequest))
+        except  Account.DoesNotExist:
+            return JsonResponse(define.response("success", 0, "用户不存在"))
+    else:
+        return JsonResponse(define.response("success",0,"请使用POST方式请求"))
+    return JsonResponse(data);
 
-def get_game_club_report(data):
+
+def get_game_club_report(data, openid = None):
     response = {}
     response = model_to_dict(data, exclude=['game','game_clubA','game_clubB','win_club','price'])
-    response['game'] = game.returngame_detail(data.game.get())
+    response['game_detail'] = game.returngame_detail(data.game.get())['game_detail']
     # response['price'] = response['game'].number * response['game'].price
     response['club_A'] = game_club.returngame_club(data.game_clubA.get())
     response['club_B'] = game_club.returngame_club(data.game_clubB.get())
@@ -108,6 +145,15 @@ def get_game_club_report(data):
         response['win_club'] = game_club.returngame_club(data.win_club.get())
     except:
         response['win_club'] = {}
+
+    if openid is not None:
+        response['user_status'] = 0
+        user = Account.objects.get(openid=openid)
+        if user is data.game_clubA.get().user or data.game_clubB.get().user :
+            response['user_status'] = 1
+        elif user in data.game_clubA.get().club_manager or data.game_clubB.get().club_manager \
+                or data.game_clubA.get().club_user or data.game_clubB.get().club_user:
+            response['user_status'] = 2
     return response
 
 def get_game_club_commond(data):

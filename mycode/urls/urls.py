@@ -50,5 +50,6 @@ urlpatterns = [
     url('^gamereport/create/',game_report.create_game_report),
     url('^gamereport/list/',game_report.get_game_club_report_list),
     url('^gamereport/detail/',game_report.get_game_club_detail),
+    url('^gamereport/upload/sorce/',game_report.upload_game_report_sorce)
 
 ]

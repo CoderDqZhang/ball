@@ -6,7 +6,7 @@ import json
 import urllib.request
 import uuid
 from mycode.models import errors
-
+import hashlib
 def get_mac_address():
     mac=uuid.UUID(int = uuid.getnode()).hex[-12:]
     return ":".join([mac[e:e+2] for e in range(0,11,2)])
@@ -86,6 +86,8 @@ UPDATE_CLUB_CREATE = ['club_id','openid','club_slogan','club_desc','club_title'
 
 MY_GAME_CLUB_LIST = ['openid']
 
+GAME_CLUB_LIST = []
+
 MY_GAME_CLUB_DETAIL = ['openid','club_id']
 
 UNREAD_MESSAGE = ['openid','tag_openid','message_type']
@@ -114,7 +116,9 @@ CREATE_GAME_REPORT = ['openid','club_idA','club_idB','game_id']
 
 GAME_CLUB_REPORT_LIST = []
 
-GAME_CLUB_REPORT_DETAIL = ['game_report_id']
+GAME_CLUB_REPORT_DETAIL = ['game_report_id','openid']
+
+GAME_CLUB_REPORT_SORC = ['game_report_id','openid','sorce']
 #时间戳转换
 def timeStamp_to_date(timeStamp):
     dateArray = datetime.datetime.utcfromtimestamp(float(timeStamp))
@@ -146,12 +150,22 @@ def request_verif(request_body,request_list):
     data = {}
     error = False
     data['errors'] = []
+    sign_data = sign(json.loads(request_body.body.decode('utf-8')))
     if len(request_list) != 0:
-        print(len(request_list))
         try:
             jsonData = json.loads(request_body.body.decode('utf-8'))
+            print('sign' not in jsonData.keys())
+            if 'sign' not in jsonData.keys():
+                data['errors'].append({"参数错误": "Sign错误"})
+                return None, data
+            elif jsonData['sign'] != sign_data:
+                data['errors'].append({"签名错误": "Sign错误"})
+                return None, data
         except json.decoder.JSONDecodeError:
             error = True
+            # if sign_data == jsonData['sign']:
+            #     data['errors'].append({"签名错误": "签名错误"})
+            #     return None, data
             data['errors'].append({"参数错误": "未传值"})
             return None,data
         except:
@@ -172,7 +186,6 @@ def request_verif(request_body,request_list):
             if p not in request_body.GET:
                 data['errors'].append({"参数错误":p+"未传值"})
                 error = True
-
     if error:
         return None, data
     if request_body.method == 'POST':
@@ -190,6 +203,22 @@ def request_verif(request_body,request_list):
 		 #    continue
         # dict[name] = field_instance
 	    # return dict
+#前面规则  md5(key+value+openid+times)
+
+def sign(data):
+    strs = ''
+    for key in data.keys():
+        if key != 'sign':
+            strs = strs + str(key) + str(data[key])
+    # 创建md5对象
+    hl = hashlib.md5()
+    # Tips
+    # 此处必须声明encode
+    # 若写法为hl.update(str)  报错为： Unicode-objects must be encoded before hashing
+    hl.update((strs + 'wxc218fa7c51381f48').encode(encoding='utf-8'))
+    print(hl.hexdigest())
+    return hl.hexdigest()
+
 
 def getaddress(address):
     address = urllib.request.quote(address)

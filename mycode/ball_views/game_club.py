@@ -53,7 +53,6 @@ def create_game_club(request):
                 response = model_to_dict(game_club, exclude=['user',
                                                                    'club_manager','club_user','club_post','club_ball'])
                 game_club.user.add(user)
-                game_club.club_manager.add(user)
                 response['club_post'] =  define.MEDIAURL + request.FILES.get('club_post').name
                 response['create_user'] = model_to_dict(user)
                 data['game_club'] = response
@@ -86,6 +85,7 @@ def club_game_detail(request):
     else:
         return JsonResponse(define.response("success",0,"请使用POST方式请求"))
     return JsonResponse(data);
+
 #我的俱乐部
 def my_game_club_list(request):
     if request.method == 'POST':
@@ -115,7 +115,7 @@ def my_game_club_list(request):
 def game_club_list(request):
     if request.method == 'POST':
         try:
-            body, checkrequest = define.request_verif(request, define.MY_GAME_CLUB_LIST)
+            body, checkrequest = define.request_verif(request, define.GAME_CLUB_LIST)
             if checkrequest is None:
                 data = {}
                 response = {}
@@ -472,6 +472,11 @@ def club_status(request):
                         game_report.success = 1
                         game_report.save()
                         data['message'] = '接受比赛'
+                    elif unread.message_type == 5:
+                        game_report = Game_club_report.objects.get(id=unread.unread_game_club_report.first().id)
+                        game_report.score = game_report.temp_score
+                        game_report.save()
+                        data['message'] = '比分确认'
                     return JsonResponse(define.response("success", 0, request_data=data))
                 else:
                     if unread.message_type == 4:
@@ -480,6 +485,11 @@ def club_status(request):
                         game_report.success = 0
                         game_report.save()
                         data['message'] = '拒绝比赛'
+                    elif unread.message_type == 5:
+                        game_report = Game_club_report.objects.get(id=unread.unread_game_club_report.first().id)
+                        game_report.temp_score = ""
+                        game_report.save()
+                        data['message'] = '比分否决'
                     else:
                         data["message"] = '拒绝入群'
                     return JsonResponse(define.response("success", 0, request_data=data))

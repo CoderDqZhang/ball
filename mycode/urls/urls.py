@@ -50,6 +50,9 @@ urlpatterns = [
     url('^gamereport/create/',game_report.create_game_report),
     url('^gamereport/list/',game_report.get_game_club_report_list),
     url('^gamereport/detail/',game_report.get_game_club_detail),
-    url('^gamereport/upload/sorce/',game_report.upload_game_report_sorce)
-
+    url('^gamereport/upload/sorce/',game_report.upload_game_report_sorce),
+    url('^gamereport/upload/images/',game_report.upload_game_report_images),
+    url('^gamereport/comment/',game_report.game_report_comment),
+    url('^gamereport/getcomment/',game_report.get_game_report_conmmend),
+    url('^gamereport/getimages/',game_report.get_game_report_images),
 ]

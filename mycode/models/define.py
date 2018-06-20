@@ -119,6 +119,13 @@ GAME_CLUB_REPORT_LIST = []
 GAME_CLUB_REPORT_DETAIL = ['game_report_id','openid']
 
 GAME_CLUB_REPORT_SORC = ['game_report_id','openid','sorce']
+
+GAME_GAME_REPORT_IMAGES = ['game_report_id','openid','content','file']
+
+GAME_REPORT_COMMENT = ['openid','game_report_id','content','rank','skillrank','anonymity']
+
+GET_GAME_REPOT_INFOS = ['game_report_id']
+
 #时间戳转换
 def timeStamp_to_date(timeStamp):
     dateArray = datetime.datetime.utcfromtimestamp(float(timeStamp))
@@ -150,11 +157,11 @@ def request_verif(request_body,request_list):
     data = {}
     error = False
     data['errors'] = []
-    sign_data = sign(json.loads(request_body.body.decode('utf-8')))
     if len(request_list) != 0:
         try:
             jsonData = json.loads(request_body.body.decode('utf-8'))
-            print('sign' not in jsonData.keys())
+            print(jsonData)
+            sign_data = sign(json.loads(request_body.body.decode('utf-8')))
             if 'sign' not in jsonData.keys():
                 data['errors'].append({"参数错误": "Sign错误"})
                 return None, data
@@ -163,13 +170,15 @@ def request_verif(request_body,request_list):
                 return None, data
         except json.decoder.JSONDecodeError:
             error = True
+            print("json 解析出错")
             # if sign_data == jsonData['sign']:
             #     data['errors'].append({"签名错误": "签名错误"})
             #     return None, data
             data['errors'].append({"参数错误": "未传值"})
             return None,data
         except:
-            return  None,data['errors'].append({"error":"error"})
+            print("出现错误")
+            return  request_body.POST,None
     else:
         return request_body, None
     if request_body.method == 'POST':

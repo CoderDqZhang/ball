@@ -22,6 +22,7 @@ class game_club_report_images(models.Model):
     url = models.URLField(null=True, blank=True)
     createTime = models.DateField(auto_created=True, auto_now_add=True)  # 创建时间
     game_club = models.ManyToManyField('GameClub', related_name='game_club+', blank=True)  # "",
+    user = models.ManyToManyField('Account', related_name='Commond.game_report+', blank=True, null=True)
 
 class game_club_report_commond(models.Model):
     user = models.ManyToManyField('Account', related_name='Commond.game_report+', blank=True, null=True)
@@ -29,4 +30,4 @@ class game_club_report_commond(models.Model):
     anonymity = models.IntegerField(default=10)
     rank = models.IntegerField(default=10)#激烈指数
     skillrank = models.IntegerField(default=10)#技能指数
-    game_club = models.ManyToManyField(Game_club_report, related_name='Tag.user+', blank=True, null=True)
+    game_club_report = models.ManyToManyField(Game_club_report, related_name='Tag.user+', blank=True, null=True)

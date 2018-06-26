@@ -1,4 +1,4 @@
-from mycode.ball_views import account_view, game, game_club,tsl,tencent_im,game_report
+from mycode.ball_views import account_view, game, game_club,tsl,tencent_im,game_report,order
 from django.conf.urls import url
 import os
 from ball import settings
@@ -55,4 +55,6 @@ urlpatterns = [
     url('^gamereport/comment/',game_report.game_report_comment),
     url('^gamereport/getcomment/',game_report.get_game_report_conmmend),
     url('^gamereport/getimages/',game_report.get_game_report_images),
+    #order
+    url('^create/order/',order.create_order)
 ]

@@ -23,6 +23,7 @@ class GameClub(models.Model):
     club_project = models.CharField("项目介绍", max_length=255, default='')
     club_number = models.IntegerField(default=0) #人数限制，0为不限制人数
     club_status = models.IntegerField(default=0) #0表示可以允许成员申请，1表示只能通过邀请加入
+    club_price = models.IntegerField(default=0)#会费
 
 class UnreadMessage(models.Model):
     user_openid = models.ManyToManyField(account.Account,related_name='unread_create_user+', blank=True) #"创建用户",

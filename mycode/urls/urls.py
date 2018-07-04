@@ -56,5 +56,8 @@ urlpatterns = [
     url('^gamereport/getcomment/',game_report.get_game_report_conmmend),
     url('^gamereport/getimages/',game_report.get_game_report_images),
     #order
-    url('^create/order/',order.create_order)
+    url('^create/order/',order.create_order),
+    url('^order/detail/',order.get_order_detail),
+    url('^order/topup/',order.topup),
+    url('^order/withdraw',order.withdraw)
 ]

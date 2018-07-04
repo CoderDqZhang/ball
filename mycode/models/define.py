@@ -128,7 +128,9 @@ GET_GAME_REPOT_INFOS = ['game_report_id']
 
 CREATE_ORDER = ['openid']
 
-TOP_UP = ['price','pay_type','price']
+ORDER_INFO = ['orderid']
+
+TOP_UP = ['openid','price']
 
 #时间戳转换
 def timeStamp_to_date(timeStamp):

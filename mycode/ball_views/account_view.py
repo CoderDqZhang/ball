@@ -14,6 +14,7 @@ from mycode.models.serializers import AccountSerializer
 import json
 import sys
 from mycode.ball_views import wechat_web_pay
+from mycode.libs.pay import WechatAPI
 import importlib
 importlib.reload(sys)
 
@@ -109,12 +110,7 @@ def verify_user(request):
 
                 account = Account.objects.create(
                     user=user_ins,
-                    openid=openid,
-                    # nickname = body['nickname'],
-                    # province = body['province'],
-                    # city = body['city'],
-                    # gender = body['gender'],
-                    # avatar = body['avatar']
+                    openid=openid
                 )
                 data['user'] = model_to_dict(Account.objects.get(openid=openid))
                 return JsonResponse(define.response("success", 0, None, data))
@@ -247,13 +243,15 @@ def get_user_other_conmmend(request):
     return JsonResponse(data);
 
 def create_Im(request):
-    # games = Game.objects.all()
-    # for game in games:
-    #     tencent_im.game_create_group(game)
-    # games_clubs = GameClub.objects.all()
-    # for game_club in games_clubs:
-    #     tencent_im.game_club_create_group(game_club)
-    print(wechat_web_pay.JsApi_pub().getParameters())
+    prepay_id = WechatAPI.WechatOrder(body='TEST',trade_type='JSAPI',
+                                      out_trade_no='1415659990',
+                                      total_fee="122",
+                                      spbill_create_ip='127.0.0.1',
+                                      notify_url='http://www.weixin.qq.com/wxpay/pay.php',
+                                      openid='owfcA5f3YCeZlTkXamyvq_AVqk6g')
+    prepay_id1 = prepay_id.order_post()[0]['prepay_id']
+    pay = WechatAPI.WechatPayAPI(package=str(prepay_id1))
+    print(pay.get_dic())
     return JsonResponse({'success':'成功'})
 
 def testsend_msg(request):

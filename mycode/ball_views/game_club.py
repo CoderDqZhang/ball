@@ -10,7 +10,6 @@ from mycode.models.game_report import Game_club_report
 from django.core import serializers
 import json
 from django.utils import timezone
-from mycode.ball_views.game import returngame_detail
 from mycode.ball_views import tencent_im
 from mycode.ball_views import game_report
 import datetime
@@ -187,10 +186,8 @@ def apply_club(request):
                     message_type_desc='申请入群',
                     read_flag=0
                 )
-                print(unread_club)
                 unread.user_openid.add(user)
                 unread.tag_user_openid.add(tag_user)
-                print(GameClub.objects.get(id=unread_club))
                 unread.unread_club.add(GameClub.objects.get(id = unread_club))
                 return JsonResponse(define.response("success", 0, request_data = data))
             else:

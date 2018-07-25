@@ -16,6 +16,7 @@ importlib.reload(sys)
 from django.db.models import Q
 from mycode.ball_views import tencent_im
 from django.db.models.aggregates import Count
+from mycode.ball_views import order
 from django.db.models import Sum
 
 logger = logging.getLogger(__name__)  # 刚才在setting.py中配置的logger
@@ -174,6 +175,47 @@ def game_appointment(request):
             else:
                 if detail.game_user_list.all().filter(user__openid__exact=openid):
                     data['message'] = "已经赴约了"
+                    print(detail)
+                    return JsonResponse(define.response("success", 0, None, data))
+                else:
+                    appoint_number = detail.game_user_list.all().values('number').annotate(appointment_number=Sum('number'))
+                    appoint_numbers = 0
+                    for num in appoint_number:
+                        appoint_numbers = appoint_numbers + int(num['number'])
+
+                    if appoint_numbers + number > detail.game_number:
+                        data['message'] = "球约人数已满"
+                        return JsonResponse(define.response("success", 0, None, data))
+
+                user = Account.objects.get(openid=openid)
+                if user.balance > detail.game_price:
+                    user.balance = user.balance - detail.game_price
+                    user.save()
+                    data['order'] = 'success'
+                else:
+                    data['order'] = order.get_pay_dic_info(openid=openid, total_fee=1)
+                return JsonResponse(define.response("success", 0, None, data))
+        else:
+            return JsonResponse(define.response("success", 0, checkrequest))
+    else:
+        return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
+    return JsonResponse(data);
+
+
+def add_game_appointment(request):
+    if request.method == 'POST':
+        body, checkrequest = define.request_verif(request, define.GET_GAME_APPLEMENT)
+        if checkrequest is None:
+            game_id = body['game_id']
+            openid = body['openid']
+            number = body['number_count']
+            detail = Game.objects.get(id=game_id)
+            data = {}
+            if detail is None:
+                return JsonResponse(define.response("success", 0, "球约不存在"))
+            else:
+                if detail.game_user_list.all().filter(user__openid__exact=openid):
+                    data['message'] = "已经赴约了"
                     return JsonResponse(define.response("success", 0, None, data))
                 else:
                     appoint_number = detail.game_user_list.all().values('number').annotate(appointment_number=Sum('number'))
@@ -183,7 +225,6 @@ def game_appointment(request):
                     if appoint_numbers + number > detail.game_number:
                         data['message'] = "球约人数已满"
                         return JsonResponse(define.response("success", 0, None, data))
-
                 add_user = Account.objects.get(openid=openid)
                 list = Apointment()
                 list = Apointment.objects.create(
@@ -192,6 +233,9 @@ def game_appointment(request):
                 list.user.add(add_user)
                 detail.game_user_list.add(list)
                 data = returngame_detail(detail, openid)
+                taguser = Account.objects.get(openid=detail.game_create_user.get().openid)
+                taguser.balance = taguser.balance + detail.game_price
+                taguser.save()
                 return JsonResponse(define.response("success", 0, None, data))
         else:
             return JsonResponse(define.response("success", 0, checkrequest))

@@ -24,6 +24,7 @@ urlpatterns = [
     url('^gamecreate/',game.game_create),
     url('^gamedetail/',game.game_detail),
     url('^gameappointment/',game.game_appointment),
+    url('^game/appointment/add/',game.add_game_appointment),
     url('^mygameappoinment/',game.my_game_appointment),
     url('^gamecancelappoinment/',game.cancel_game_appointment),
     url('^gamesearch/',game.search),
@@ -59,5 +60,6 @@ urlpatterns = [
     url('^create/order/',order.create_order),
     url('^order/detail/',order.get_order_detail),
     url('^order/topup/',order.topup),
-    url('^order/withdraw',order.withdraw)
+    url('^order/withdraw',order.withdraw),
+    url('^order/payback/',order.payback)
 ]

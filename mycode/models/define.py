@@ -19,8 +19,8 @@ else:
     MEDIAURL = 'http://127.0.0.1:8000/media/'
 
 #微信小程序app-id/secret
-WEICHAT_APPID='wxc218fa7c51381f48'
-WEICHAT_SECRET= 'a4d7d52fcc1fb3293c25245bdff07baf'
+WEICHAT_APPID='wx8df2ccb21a4fd773'
+WEICHAT_SECRET= 'c9ada9eec82367554b251b22b4e406d4'
 
 
 
@@ -177,9 +177,6 @@ def request_verif(request_body,request_list):
         except json.decoder.JSONDecodeError:
             error = True
             print("json 解析出错")
-            # if sign_data == jsonData['sign']:
-            #     data['errors'].append({"签名错误": "签名错误"})
-            #     return None, data
             data['errors'].append({"参数错误": "未传值"})
             return None,data
         except:
@@ -207,19 +204,6 @@ def request_verif(request_body,request_list):
         return json.loads(request_body.body.decode('utf-8')), None
     return request_body.GET, None
 
-# def as_dict(models):
-	    # dict = {}
-	    # #exclude ManyToOneRel, which backwards to ForeignKey
-	    # field_names = [field.name for field in models._meta.get_fields() if 'ImageField' not in str(field)]
-	    # for name in field_names:
-		 #    field_instance = getattr(self, name)
-        # if field_instance.__class__.__name__ == 'ManyRelatedManager':
-		 #    dict[name] = field_instance.all()
-		 #    continue
-        # dict[name] = field_instance
-	    # return dict
-#前面规则  md5(key+value+openid+times)
-
 def sign(data):
     strs = ''
     for key in data.keys():
@@ -227,10 +211,7 @@ def sign(data):
             strs = strs + str(key) + str(data[key])
     # 创建md5对象
     hl = hashlib.md5()
-    # Tips
-    # 此处必须声明encode
-    # 若写法为hl.update(str)  报错为： Unicode-objects must be encoded before hashing
-    hl.update((strs + 'wxc218fa7c51381f48').encode(encoding='utf-8'))
+    hl.update((strs + WEICHAT_APPID).encode(encoding='utf-8'))
     print(hl.hexdigest())
     return hl.hexdigest()
 

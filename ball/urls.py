@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^ball/', include('mycode.urls.urls')),
+    url(r'^pay/', include('mycode.urls.pay_urls')),
 ]
 #七牛保存文件路径
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

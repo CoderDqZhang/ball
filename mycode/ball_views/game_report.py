@@ -152,7 +152,6 @@ def upload_game_report_images(request):
                 )
                 club_image.game_club_report.add(game_club_report)
                 club_image.user.add(user)
-                print(game_club_report.game_clubA.get().user)
                 if user in game_club_report.game_clubA.get().user.all() \
                         or game_club_report.game_clubA.get().club_manager.all() \
                         or game_club_report.game_clubA.get().club_user.all() :
@@ -242,7 +241,6 @@ def get_game_club_report(data, openid = None):
     response = {}
     response = model_to_dict(data, exclude=['game','game_clubA','game_clubB','win_club','price'])
     response['game_detail'] = game.returngame_detail(data.game.get())['game_detail']
-    # response['price'] = response['game'].number * response['game'].price
     response['club_A'] = game_club.returngame_club(data.game_clubA.get())
     response['club_B'] = game_club.returngame_club(data.game_clubB.get())
     try:

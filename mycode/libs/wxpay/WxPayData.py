@@ -1,10 +1,9 @@
 # -*- coding:utf-8 -*-
 import json
 import hashlib
-import xmltodict
-from WxPayException import WxPayException
-from WxPayConfig import WxPayConfig
-from liangpiao.utils.escape import utf8
+import xml
+from mycode.libs.wxpay import WxPayException
+from mycode.libs.wxpay  import WxPayConfig
 
 
 class WxPayDataBase(object):
@@ -30,7 +29,7 @@ class WxPayDataBase(object):
         try:
             self._values = json.loads(json.dumps(xmltodict.parse(xml)['xml']))
         except Exception as e:
-            print e
+            print(e)
             self._values = {}
         return self._values
 
@@ -38,7 +37,7 @@ class WxPayDataBase(object):
         params_str = self.to_url_params()
         partner_key = WxPayConfig.KEY
         params_str = '%(params_str)s&key=%(partner_key)s' % {'params_str': params_str, 'partner_key': partner_key}
-        params_str = hashlib.md5(utf8(params_str)).hexdigest()
+        params_str = hashlib.md5((params_str).encode('utf-8')).hexdigest()
         sign = params_str.upper()
         return sign
 

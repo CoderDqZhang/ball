@@ -8,6 +8,8 @@ from mycode.models.game_club import GameClub
 from mycode.models.order import Order
 import datetime
 from django.forms.models import model_to_dict
+from mycode.ball_views import wechat_web_pay
+from mycode.libs.pay import WechatAPI
 import uuid
 
 #order_type 1=充值 2，提现 3，球约，4，俱乐部对抗赛 5俱乐部，
@@ -179,4 +181,23 @@ def get_order_info(data):
         response['game_report'] = game_report.get_game_club_report(data.game_report.get())
     elif response['order_type'] == 5:
         response['game_club'] = game_club.returngame_club(data.game_club.get())
-    return  response
+    return response
+
+#'owfcA5f3YCeZlTkXamyvq_AVqk6g'
+def get_pay_dic_info(openid,total_fee):
+    prepay_id = WechatAPI.WechatOrder(body='TEST', trade_type='JSAPI',
+                                      out_trade_no='1415659990',
+                                      total_fee=total_fee,
+                                      spbill_create_ip='127.0.0.1',
+                                      notify_url='http://127.0.0.1:8000/order/payback',
+                                      openid=openid)
+    prepay_id1 = prepay_id.order_post()[0]['prepay_id']
+    pay = WechatAPI.WechatPayAPI(package=str(prepay_id1))
+    return pay.get_dic()
+
+
+def payback(request):
+    msg = request.body.decode('utf-8')
+    print(msg)
+    return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
+

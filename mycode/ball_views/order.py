@@ -189,7 +189,7 @@ def get_pay_dic_info(openid,total_fee):
                                       out_trade_no='1415659990',
                                       total_fee=total_fee,
                                       spbill_create_ip='127.0.0.1',
-                                      notify_url='http://127.0.0.1:8000/order/payback',
+                                      notify_url='https://yq.topveda.cn/ball/order/payback',
                                       openid=openid)
     prepay_id1 = prepay_id.order_post()[0]['prepay_id']
     pay = WechatAPI.WechatPayAPI(package=str(prepay_id1))
@@ -199,5 +199,6 @@ def get_pay_dic_info(openid,total_fee):
 def payback(request):
     msg = request.body.decode('utf-8')
     print(msg)
+    print(request)
     return JsonResponse(define.response("success", 0, "请使用POST方式请求"))
 

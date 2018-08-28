@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from mycode.models import define,account,game,game_club
+from mycode.models import   game
+
 
 class Game_club_report(models.Model):
     game = models.ManyToManyField(game.Game,related_name='game+',blank=False,null=False)

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from mycode.models import define,account
+from mycode.models import  account
+
 
 class Order(models.Model):
     order_id = models.CharField(max_length=255,null = False, blank=False,primary_key=True)

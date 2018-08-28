@@ -1,21 +1,16 @@
 # Create your views here.
 # coding=utf-8
-from django.contrib.auth import login, authenticate
-from django.http import JsonResponse
-from django.contrib.auth.models import User
-from django.contrib import auth
-from django.forms.models import model_to_dict
-from mycode.models.account import Account,Commond
-from mycode.ball_views import tencent_im
-from .checkuser import checkdata
-import logging
-from mycode.models import define
-from mycode.models.serializers import AccountSerializer
+import importlib
 import json
 import sys
-from mycode.ball_views import wechat_web_pay
+from django.contrib.auth.models import User
+from django.forms.models import model_to_dict
+from django.http import JsonResponse
+from mycode.ball_views import tencent_im
 from mycode.libs.pay import WechatAPI
-import importlib
+from mycode.models import define
+from mycode.models.account import Account,Commond
+
 importlib.reload(sys)
 
 # def verify_user(request):

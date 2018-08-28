@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
-from django.db import models
-from mycode.models import define,account
-from django.contrib.auth.models import User
-from django.forms.models import model_to_dict
-from django.utils import timezone
-import datetime
-import sys
 import importlib
+import sys
+from django.db import models
+from django.utils import timezone
+from mycode.models import  account
+
 importlib.reload(sys)
-from django.db.models import Q
 
 class Ball(models.Model):
 

@@ -1,16 +1,15 @@
+import uuid
+from django.forms.models import model_to_dict
 from django.http import JsonResponse
+from mycode.ball_views import game_club,game_report,game
+from mycode.libs.pay import WechatAPI
 from mycode.models import define
 from mycode.models.account import Account
 from mycode.models.game import Game
-from mycode.models.game_report import Game_club_report
-from mycode.ball_views import game_club,game_report,game
 from mycode.models.game_club import GameClub
+from mycode.models.game_report import Game_club_report
 from mycode.models.order import Order
-import datetime
-from django.forms.models import model_to_dict
-from mycode.ball_views import wechat_web_pay
-from mycode.libs.pay import WechatAPI
-import uuid
+
 
 #order_type 1=充值 2，提现 3，球约，4，俱乐部对抗赛 5俱乐部，
 #status = 0 创建未付款 1，等待付款

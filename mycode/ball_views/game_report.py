@@ -1,18 +1,17 @@
 # coding=utf-8
+from django.forms.models import model_to_dict
 from django.http import JsonResponse
-from mycode.models import define
-from mycode.models.game_report import Game_club_report
-from mycode.models.game import Game
 from mycode.ball_views import game
 from mycode.ball_views import game_club
-from mycode.models.game_club import GameClub,UnreadMessage
-from mycode.models.game_report import game_club_report_images,game_club_report_commond
+from mycode.models import define
 from mycode.models.account import Account
-from django.db.models import Q
-import logging
-from django.forms.models import model_to_dict
-from django.core.files.base import ContentFile
+from mycode.models.game import Game
+from mycode.models.game_club import GameClub,UnreadMessage
+from mycode.models.game_report import Game_club_report
+from mycode.models.game_report import game_club_report_images,game_club_report_commond
 from mycode.utils import upload_qiniu
+
+
 
 #创建俱乐部
 def create_game_report(request):

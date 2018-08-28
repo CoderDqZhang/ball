@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
+import importlib
+import sys
+from django.contrib.auth.models import User
 from django.db import models
 from mycode.models import define
-from django.contrib.auth.models import User
-from django.forms.models import model_to_dict
-from django.utils import timezone
-import datetime
-import sys
-import importlib
+
 importlib.reload(sys)
-from django.db.models import Q
 
 class Account(models.Model):
 

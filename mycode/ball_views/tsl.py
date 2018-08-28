@@ -1,6 +1,7 @@
 from django.http import JsonResponse
-from mycode.utils import TLS
 from mycode.models import define
+from mycode.utils import TLS
+
 
 def verify_sign(request):
     if request.method == 'POST':

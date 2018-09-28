@@ -15,14 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.urls import path
 from ball import settings
 from django.conf.urls.static import static
-import xadmin
+
 
 urlpatterns = [
-    # url(r'^grappelli/', include('grappelli.urls')),
-    path('xadmin/', xadmin.site.urls),
+    url(r'^grappelli/', include('grappelli.urls')),
+    url(r'^admin/', admin.site.urls),
     url(r'^ball/', include('mycode.urls.urls')),
     url(r'^pay/', include('mycode.urls.pay_urls')),
 ]
